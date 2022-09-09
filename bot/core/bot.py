@@ -2,8 +2,7 @@ import inspect
 import logging
 import platform
 from datetime import datetime
-from types import ModuleType
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 import discord
 from bot import __version__
 
@@ -43,33 +42,6 @@ class Bot(discord.Bot):
 
     def fix_doc(self, *doc: str):
         return inspect.cleandoc("\n".join(doc))
-
-    def load_extension(
-        self,
-        name: str,
-        *,
-        package: Optional[str] = None,
-        recursive: bool = False,
-        store: bool = False,
-    ):
-        result = super().load_extension(
-            name,
-            package=package,
-            recursive=recursive,
-            store=store,
-        )
-
-        for ext in result if type(result) is list else [result]:
-            if isinstance(ext, Exception):
-                self._check_extension.pop(ext)
-            elif self._cog_extensions.get(ext) and ext not in self._check_extension:
-                self._check_extension.append(ext)
-
-        return result
-
-    @property
-    def _cog_extensions(self) -> Dict[str, ModuleType]:
-        return self._CogMixin__extensions
 
     def run(self, *args: Any, **kwargs: Any):
         for msg in self.fix_doc(
