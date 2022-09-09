@@ -2,7 +2,7 @@ import inspect
 import logging
 import platform
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 import discord
 from bot import __version__
 
@@ -15,7 +15,6 @@ class Bot(discord.Bot):
     def __init__(self, *args, dev: bool = False, **kwargs):
         self.dev = dev
         self.log = log
-        self._check_extension: List[str] = []
         self._uptime: Optional[datetime] = None
 
         super().__init__(*args, **kwargs)
