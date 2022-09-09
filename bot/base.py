@@ -2,11 +2,13 @@ from typing import TYPE_CHECKING, Any, ClassVar, Type, TypeVar
 
 import discord
 
-__all__ = ("BaseCog",)
+__all__ = ("BaseCog", "Bot")
 
 
 if TYPE_CHECKING:
     from .core.bot import Bot
+else:
+    Bot = None
 
 CogT = TypeVar("CogT", bound="BaseCog")
 

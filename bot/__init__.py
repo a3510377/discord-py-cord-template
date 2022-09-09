@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from .base import *
+
 __all__ = (
     "__version__",
     "__base_dir__",

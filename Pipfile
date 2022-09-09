@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 py-cord = "*"
 python-dotenv = "*"
+rich = "*"
 
 [dev-packages]
 black = "*"
