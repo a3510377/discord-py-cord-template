@@ -15,7 +15,7 @@ from rich.syntax import PygmentsSyntaxTheme
 from pygments.styles.monokai import MonokaiStyle
 
 
-log = logging.getLogger("lipoic")
+log = logging.getLogger("bot")
 StrPath = Union[Path, str]
 
 

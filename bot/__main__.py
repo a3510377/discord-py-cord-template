@@ -30,7 +30,7 @@ def run(input_token: bool, dev: bool, token: str, level: List[str]):
     from .core.bot import Bot
 
     if input_token:
-        token = click.prompt("Token: ", hide_input=True)
+        token = click.prompt("Token", hide_input=True)
     elif not token:
         click.echo("Please enter a token")
         return
