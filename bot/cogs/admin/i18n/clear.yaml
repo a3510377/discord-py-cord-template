@@ -1,0 +1,18 @@
+delete:
+  zh-TW:
+    name: delete
+    description: 刪除消息
+    args:
+  en-US:
+    name: delete
+    description: Delete Message
+    args:
+purge:
+  zh-TW:
+    name: purge
+    description: 刪除多則消息
+    args:
+  en-US:
+    name: purge
+    description: Delete Many Messages
+    args:
