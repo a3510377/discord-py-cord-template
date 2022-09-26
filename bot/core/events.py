@@ -1,5 +1,7 @@
-from datetime import datetime
 import discord
+from discord import ApplicationContext, DiscordException
+from datetime import datetime
+
 from bot import BaseCog, Bot
 
 
@@ -15,16 +17,20 @@ class BaseEventsCog(BaseCog):
         bot.log.info(f"[cyan]{bot.user}[/cyan]")
 
     @discord.Cog.listener()
+    async def on_application_command(self, ctx: ApplicationContext):
+        self.bot.log.info(
+            f"[{ctx.guild.name}] [{ctx.channel.name}] "
+            f"{ctx.author} -> {ctx.command.name}"
+        )
+
+    @discord.Cog.listener()
     async def on_application_command_error(
-        self, ctx: discord.ApplicationContext, error: discord.DiscordException
+        self,
+        ctx: ApplicationContext,
+        error: DiscordException,
     ):
         print(f"{type(error)}: {error}")
         print(error.__class__.__name__)
-        # if isinstance(error, MissingPermissions):
-        #     embed = discord.Embed(
-        #         title="發生錯誤!", description="你沒有權限執行指令", color=0xE74C3C
-        #     )
-        #     await ctx.respond(embed=embed)
 
 
 def setup(bot: "Bot"):

@@ -1,8 +1,10 @@
 import inspect
+import json
 import logging
 import platform
+from pathlib import Path
 from datetime import datetime
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 import discord
 from bot import __version__
 
@@ -38,6 +40,25 @@ class Bot(discord.Bot):
         if (channel := self.get_channel(channel_id := int(channel_id))) is not None:
             return channel
         return await self.fetch_channel(channel_id)
+
+    def add_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
+        SlashCommand = (discord.SlashCommand, discord.SlashCommandGroup)
+
+        if isinstance(cog, discord.Cog):
+            cog_file = Path(inspect.getfile(cog.__class__))
+            i18n_dir: Path = cog_file.parent / "i18n"
+
+            # https://discord.com/developers/docs/reference#locales
+            local: Dict[str, str] = {}
+            if (i18n_file := i18n_dir / f"{cog_file.stem}.json").is_file():
+                local = json.loads(i18n_file.read_text(encoding="utf-8"))
+
+            for command in cog.__cog_commands__:
+                if isinstance(command, SlashCommand):
+                    command: Union[discord.SlashCommand, discord.SlashCommandGroup]
+
+                    command.description_localizations = local.get(command.name)
+        super().add_cog(cog, override=override)
 
     def fix_doc(self, *doc: str):
         return inspect.cleandoc("\n".join(doc))

@@ -1,0 +1,10 @@
+{
+  "delete": {
+    "zh-TW": "刪除消息",
+    "en-US": "Delete Message"
+  },
+  "purge": {
+    "zh-TW": "刪除多則消息",
+    "en-US": "Delete Many Messages"
+  }
+}

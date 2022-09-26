@@ -5,7 +5,7 @@ from bot import BaseCog, Bot
 
 
 class ClearCog(BaseCog):
-    @discord.slash_command(description="Delete Message", guild_only=True)
+    @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
     async def delete(
         self,
@@ -19,7 +19,7 @@ class ClearCog(BaseCog):
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
         await ctx.respond(embed=embed, ephemeral=True)
 
-    @discord.slash_command(description="Delete Many Messages", guild_only=True)
+    @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
     async def purge(
         self,
@@ -45,7 +45,7 @@ class ClearCog(BaseCog):
 
         del_message = await ctx.channel.purge(
             limit=count,
-            check=lambda msg: msg.author == member,
+            check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
         )
@@ -53,11 +53,6 @@ class ClearCog(BaseCog):
             title=f"成功刪除了 `{len(del_message)}` 則訊息!",
             description=f"原因: {reason}",
         )
-        await ctx.respond(embed=embed, ephemeral=True)
-
-    @purge.error
-    async def purge_error(self, ctx: ApplicationContext, error: Exception):
-        embed = Embed(title="刪除失敗!", description=f"Error:```{error}```", color=0xE74C3C)
         await ctx.respond(embed=embed, ephemeral=True)
 
 
