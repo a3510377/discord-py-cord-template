@@ -151,7 +151,7 @@ def init_logging(level: int, directory: Optional[StrPath] = None) -> Logger:
     warnings_logger = logging.getLogger("py.warnings")
 
     log.setLevel(level)
-    dpy_logger.setLevel(logging.WARNING)
+    dpy_logger.setLevel(logging.ERROR)
     warnings_logger.setLevel(logging.WARNING)
 
     shell_formatter = logging.Formatter("{message}", datefmt="[%X]", style="{")
