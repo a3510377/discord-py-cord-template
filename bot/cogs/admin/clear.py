@@ -14,7 +14,7 @@ class ClearCog(BaseCog):
         reason: Option(str, "Reason", default="無原因"),
     ):
         message: Message = await ctx.fetch_message(int(message_id))
-        await message.delete(reason=reason)
+        await message.delete(reason=f"由 {ctx.author} 清除 - {reason}")
         embed = Embed(title="訊息刪除成功!", description=f"原因: {reason}")
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
         await ctx.respond(embed=embed, ephemeral=True)
@@ -48,6 +48,7 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
+            reason=f"由 {ctx.author} 清除 - {reason}",
         )
         embed = Embed(
             title=f"成功刪除了 `{len(del_message)}` 則訊息!",

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from .base import *
+from .utils.base import *
 
 __all__ = (
     "__version__",

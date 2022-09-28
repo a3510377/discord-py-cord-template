@@ -43,7 +43,7 @@ class Bot(discord.Bot, object):
     def add_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
         if isinstance(cog, discord.Cog):
             # https://discord.com/developers/docs/reference#locales
-            I18n().set_cog(cog)
+            I18n.set_cog(cog)
         super().add_cog(cog, override=override)
 
     def fix_doc(self, *doc: str):
@@ -59,4 +59,4 @@ class Bot(discord.Bot, object):
         ).split("\n"):
             log.info(msg)
 
-        super().run(*args, **kwargs)
+        # super().run(*args, **kwargs)
