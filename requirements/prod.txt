@@ -1,0 +1,5 @@
+py-cord >= 2.0.0
+
+rich
+PyYAML
+python-dotenv

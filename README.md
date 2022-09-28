@@ -2,6 +2,54 @@
 
 Python Discord Bot(py-cord版) 基礎骨架
 
+## 食用方法
+
+食用要求:
+
+1. python 版本 >= 3.8
+2. ~~空腹 ( 怕你吃到吐 ) 😑~~
+
+### pipenv
+
+使用外部函數庫 [pipenv](https://pypi.org/project/pipenv/)
+
+```sh
+pip install pipenv # 安裝 pipenv
+pipenv install
+```
+
+### venv
+
+使用 python 內建函數庫 [venv](https://docs.python.org/zh-tw/3/tutorial/venv.html)
+
+- 生產中使用
+
+```sh
+pip install -r requirements/prod.txt
+```
+
+- 開發中使用
+
+```sh
+pip install -r requirements/dev.txt
+```
+
+### python
+
+將函數庫直接下載到全域
+
+- 生產中使用
+
+```sh
+pip install -r requirements/prod.txt
+```
+
+- 開發中使用
+
+```sh
+pip install -r requirements/dev.txt
+```
+
 ## 檔案結構
 
 ```python
