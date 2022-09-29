@@ -1,7 +1,7 @@
 import json
 import inspect
 from pathlib import Path
-from typing import Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, TypedDict, Union, overload
 
 import yaml
 import discord
@@ -19,7 +19,12 @@ class BaseI18nDataType(TypedDict):
     name: str
     description: str
     args: "CommandArgsDataType"
+    messages: Dict[str, Any]
 
+
+MessageListType = List[Any]
+MessageDictType = Dict[str, str]
+MessagesType = Dict[str, Union[MessageListType, MessageDictType, "MessagesType"]]
 
 CommandArgsDataType = Dict[str, CommandI18nDataType]
 CommandArgsI18nDataType = Dict[str, CommandArgsDataType]
@@ -28,42 +33,65 @@ LocalCommandsType = Union[SlashCommand, SlashCommandGroup]
 
 
 class I18n:
-    # @overload
-    # def __init__(self, *, cog: discord.Cog) -> None:
-    #     """get i18n from cog"""
-    #     ...
+    @overload
+    def __init__(self, *, cog: discord.Cog) -> None:
+        """get i18n from cog"""
+        ...
 
-    # @overload
-    # def __init__(self, *, path: Union[str, Path], file_name: str) -> None:
-    #     """get i18n from file"""
-    #     ...
+    @overload
+    def __init__(self, *, path: Union[str, Path], file_name: str) -> None:
+        """get i18n from file"""
+        ...
 
-    # @overload
-    # def __init__(self, *, command: LocalCommandsType) -> None:
-    #     """get i18n from command"""
-    #     ...
+    @overload
+    def __init__(self, *, command: LocalCommandsType) -> None:
+        """get i18n from command"""
+        ...
 
-    # def __init__(
-    #     self,
-    #     *,
-    #     cog: Optional[discord.Cog] = None,
-    #     path: Optional[Union[str, Path]] = None,
-    #     file_name: Optional[str] = None,
-    #     command: Optional[LocalCommandsType] = None,
-    # ) -> None:
-    #     self.local = None
+    def __init__(
+        self,
+        *,
+        cog: Optional[discord.Cog] = None,
+        path: Optional[Union[str, Path]] = None,
+        file_name: Optional[str] = None,
+        command: Optional[LocalCommandsType] = None,
+    ) -> None:
+        self.local = None
 
-    #     if cog is not None:
-    #         self.cog = cog
-    #         self.local = I18n.get_cog_i18n_file(cog)
-    #     elif path is not None:
-    #         if file_name is None:
-    #             raise ValueError("MISS filename")
+        if cog is not None:
+            self.cog = cog
+            self.local = I18n.get_cog_i18n_file(cog)
+        elif path is not None:
+            if file_name is None:
+                raise ValueError("MISS filename")
 
-    #         self.local = I18n.load_i18n_file(cog, file_name)
-    #     elif command is not None:
-    #         self.command = command
-    #         self.local = I18n.get_cog_i18n_file(cog)
+            self.local = I18n.load_i18n_file(cog, file_name)
+        elif command is not None:
+            self.command = command
+            self.local = I18n.get_cog_i18n_file(cog)
+
+    def get_local_message(self):
+        message_local_data: Dict[str, Dict[str, str]] = {}
+
+        def _parse(command_name: str, data: MessagesType):
+            base = message_local_data[command_name]
+            for key, value in data.items():
+                if isinstance(value, dict):
+                    _parse(value)
+                else:
+                    base[key] = value
+
+        for command_name, langs in self.local.items():
+            message_local_data[command_name] = {}
+
+            for lang, data in langs.items():
+                # for key, value in data.get("messages", {}).items():
+                message_local_data[command_name][lang] = data.get("messages", {})
+
+        return message_local_data
+
+    def get(self, lang: str, key: str, default: Optional[str] = None, **kwargs) -> str:
+        return self.local.get(key, default).format(**kwargs)
 
     @staticmethod
     def load_i18n_file(
