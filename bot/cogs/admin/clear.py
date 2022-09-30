@@ -30,6 +30,10 @@ class ClearCog(BaseCog):
         before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
         after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
     ):
+        print(ctx._("a"))
+        print(ctx._("b"))
+        print(ctx._("c.a"))
+        print(ctx._("c.a.a"))
         if before and after:
             embed = Embed(
                 title="錯誤!",

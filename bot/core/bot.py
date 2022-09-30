@@ -1,9 +1,12 @@
 import inspect
 import logging
+import os
 import platform
 from datetime import datetime
 from typing import Any, Optional, Union
+
 import discord
+
 from bot import __version__
 from bot.core.i18n import I18n
 
@@ -17,8 +20,11 @@ class Bot(discord.Bot, object):
         self.dev = dev
         self.log = log
         self._uptime: Optional[datetime] = None
+        self.base_lang = os.getenv("BASE_LANG", "zh_TW")
 
         super().__init__(*args, **kwargs)
+
+        self.before_invoke(I18n.before_invoke)
 
         self.load_extension("bot.core.events")
         self.load_extension("bot.cogs", recursive=True)
@@ -59,4 +65,4 @@ class Bot(discord.Bot, object):
         ).split("\n"):
             log.info(msg)
 
-        # super().run(*args, **kwargs)
+        super().run(*args, **kwargs)

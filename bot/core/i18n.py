@@ -5,8 +5,14 @@ from typing import Any, Dict, List, Optional, TypedDict, Union, overload
 
 import yaml
 import discord
-from discord import SlashCommand, SlashCommandGroup
+from discord import (
+    ApplicationContext,
+    SlashCommand,
+    SlashCommandGroup,
+)
+from discord.ext.commands import Context
 
+from bot import Bot
 from bot.utils import set_dict_default
 
 
@@ -19,85 +25,97 @@ class BaseI18nDataType(TypedDict):
     name: str
     description: str
     args: "CommandArgsDataType"
-    messages: Dict[str, Any]
+    messages: "MessagesType"
 
+
+# Dict[arg_name, CommandI18nDataType]
+CommandArgsDataType = Dict[str, CommandI18nDataType]
+# Dict[lang_name, BaseI18nDataType]
+LocalsI18nDataType = Dict[str, BaseI18nDataType]
+# Dict[command_name, LocalsI18nDataType]
+I18nFileDataType = Dict[str, LocalsI18nDataType]
+LocalCommandsType = Union[SlashCommand, SlashCommandGroup]
 
 MessageListType = List[Any]
 MessageDictType = Dict[str, str]
 MessagesType = Dict[str, Union[MessageListType, MessageDictType, "MessagesType"]]
-
-CommandArgsDataType = Dict[str, CommandI18nDataType]
+# Dict[lang_name, CommandArgsDataType]
 CommandArgsI18nDataType = Dict[str, CommandArgsDataType]
-I18nFileDataType = Dict[str, Dict[str, BaseI18nDataType]]
-LocalCommandsType = Union[SlashCommand, SlashCommandGroup]
 
 
 class I18n:
     @overload
-    def __init__(self, *, cog: discord.Cog) -> None:
-        """get i18n from cog"""
+    def get(
+        locals: LocalsI18nDataType,
+        key: str,
+        lang: str,
+        default: Optional[str] = None,
+        **kwargs: str,
+    ) -> Optional[str]:
         ...
 
     @overload
-    def __init__(self, *, path: Union[str, Path], file_name: str) -> None:
-        """get i18n from file"""
+    def get(locals: LocalsI18nDataType) -> Dict[str, Union[str, List[Any]]]:
         ...
-
-    @overload
-    def __init__(self, *, command: LocalCommandsType) -> None:
-        """get i18n from command"""
-        ...
-
-    def __init__(
-        self,
-        *,
-        cog: Optional[discord.Cog] = None,
-        path: Optional[Union[str, Path]] = None,
-        file_name: Optional[str] = None,
-        command: Optional[LocalCommandsType] = None,
-    ) -> None:
-        self.local = None
-
-        if cog is not None:
-            self.cog = cog
-            self.local = I18n.get_cog_i18n_file(cog)
-        elif path is not None:
-            if file_name is None:
-                raise ValueError("MISS filename")
-
-            self.local = I18n.load_i18n_file(cog, file_name)
-        elif command is not None:
-            self.command = command
-            self.local = I18n.get_cog_i18n_file(cog)
-
-    def get_local_message(self):
-        message_local_data: Dict[str, Dict[str, str]] = {}
-
-        def _parse(command_name: str, data: MessagesType):
-            base = message_local_data[command_name]
-            for key, value in data.items():
-                if isinstance(value, dict):
-                    _parse(value)
-                else:
-                    base[key] = value
-
-        for command_name, langs in self.local.items():
-            message_local_data[command_name] = {}
-
-            for lang, data in langs.items():
-                # for key, value in data.get("messages", {}).items():
-                message_local_data[command_name][lang] = data.get("messages", {})
-
-        return message_local_data
-
-    def get(self, lang: str, key: str, default: Optional[str] = None, **kwargs) -> str:
-        return self.local.get(key, default).format(**kwargs)
 
     @staticmethod
-    def load_i18n_file(
-        i18n_dir: Union[str, Path],
-        file_name: str,
-    ) -> Optional[I18nFileDataType]:
+    def get(
+        locals: LocalsI18nDataType,
+        key: Optional[str] = None,
+        lang: Optional[str] = None,
+        default: Optional[str] = None,
+        **kwargs: Any,
+    ):
+        if lang and (local := locals.get(lang)):
+            keys = key.split(".")
+            value = local.get("messages")
+
+            for k in keys:
+                if isinstance(value, dict) and (value := value.get(k)):
+                    pass
+                else:
+                    value = key if default is None else default
+
+            return value.format_map(kwargs)
+        else:
+            output: Dict[str, Union[str, List[Any]]] = {}
+
+            def get_key(key: List[str], value: MessagesType):
+                if isinstance(value, (list, str)):
+                    output[key.join(".")] = value
+                else:
+                    for k, data in value.items():
+                        get_key([*key, k], data)
+
+            get_key([], locals)
+            return output
+
+    @staticmethod
+    async def before_invoke(ctx: Union[Context, ApplicationContext]):
+        bot: Bot = ctx.bot
+
+        command = ctx.command
+        command_file = Path(inspect.getfile(command.callback))
+        locals = I18n.load_i18n_file_from_file(command_file).get(command.name, {})
+        ctx.__dict__.setdefault("_", lambda *args: args)
+
+        locale = (
+            ctx.locale
+            if isinstance(ctx, ApplicationContext)
+            else ctx.guild.preferred_locale
+        ) or bot.base_lang
+
+        ctx.__dict__.update({"_": lambda key: I18n.get(locals, key, locale)})
+
+    @staticmethod
+    def load_i18n_file_from_file(path: Union[str, Path]) -> Optional[I18nFileDataType]:
+        if not (path := Path(path)).is_file():
+            raise ValueError("path must be a file")
+
+        i18n_dir = path.parent / "i18n"
+        file_name = path.stem
+
+        # https://discord.com/developers/docs/reference#locales
         if (
             (i18n_file := Path(i18n_dir) / f"{file_name}.json").is_file()
             or (i18n_file := Path(i18n_dir) / f"{file_name}.yml").is_file()
@@ -111,16 +129,17 @@ class I18n:
             else:
                 return yaml.safe_load(data)
 
-        return None
+    @staticmethod
+    def load_i18n_file(
+        i18n_dir: Union[str, Path],
+        file_name: str,
+    ) -> Optional[I18nFileDataType]:
+        return I18n.load_i18n_file_from_file(Path(i18n_dir) / file_name)
 
     @staticmethod
     def get_cog_i18n_file(cog: discord.Cog) -> Optional[I18nFileDataType]:
         if isinstance(cog, discord.Cog):
-            cog_file = Path(inspect.getfile(cog.__class__))
-            i18n_dir: Path = cog_file.parent / "i18n"
-
-            # https://discord.com/developers/docs/reference#locales
-            return I18n.load_i18n_file(i18n_dir, cog_file.stem)
+            return I18n.load_i18n_file_from_file(inspect.getfile(cog.__class__))
 
     @staticmethod
     def set_cog(cog: discord.Cog) -> None:

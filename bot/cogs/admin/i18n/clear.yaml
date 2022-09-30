@@ -9,6 +9,12 @@ delete:
       reason:
         # name: reason
         description: "原因( 默認: 無原因 )"
+    messages:
+      a: "a"
+      b: "b"
+      c:
+        a: "c-a"
+        b: "c-b"
   en-US:
     # name: delete
     description: Delete Message
@@ -19,6 +25,12 @@ delete:
       reason:
         # name: reason
         description: "reason( default: 無原因 )"
+    messages:
+      a: "a"
+      b: "b"
+      c:
+        a: "c-a"
+        b: "c-b"
 purge:
   zh-TW:
     # name: purge
@@ -39,6 +51,12 @@ purge:
       after:
         # name: after
         description: 刪除以這則訊息以後的訊息
+    messages:
+      a: "a"
+      b: "b"
+      c:
+        a: "c-a"
+        b: "c-b"
   en-US:
     # name: purge
     description: Delete Many Messages
@@ -58,3 +76,9 @@ purge:
       after:
         # name: after
         description: 刪除以這則訊息以後的訊息
+    messages:
+      a: "a"
+      b: "b"
+      c:
+        a: "c-a"
+        b: "c-b"
