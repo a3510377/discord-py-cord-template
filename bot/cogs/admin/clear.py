@@ -11,11 +11,24 @@ class ClearCog(BaseCog):
         self,
         ctx: ApplicationContext,
         message_id: Option(str, "輸入要刪除的訊息ID"),
-        reason: Option(str, "Reason", default="無原因"),
+        reason: Option(str, "Reason", default=None),
     ):
+        _ = ctx._
+        reason = reason or _("default_reason")
         message: Message = await ctx.fetch_message(int(message_id))
-        await message.delete(reason=f"由 {ctx.author} 清除 - {reason}")
-        embed = Embed(title="訊息刪除成功!", description=f"原因: {reason}")
+
+        await message.delete(
+            reason=_(
+                "delete_reason_template",
+                ctx=ctx,
+                reason=reason,
+            )
+        )
+
+        embed = Embed(
+            title=_("done"),
+            description=_("embed_description", reason=reason),
+        )
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
         await ctx.respond(embed=embed, ephemeral=True)
 
@@ -25,15 +38,17 @@ class ClearCog(BaseCog):
         self,
         ctx: ApplicationContext,
         count: Option(int, "輸入要刪除的訊息數量", min_value=1, max_value=512),
-        reason: Option(str, "Reason", default="無原因"),
+        reason: Option(str, "Reason", default=None),
         member: Option(Member, "要刪除的成員訊息", default=None),
         before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
         after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
     ):
+        _ = ctx._
+        reason = reason or _("default_reason")
         if before and after:
             embed = Embed(
-                title="錯誤!",
-                description="`before` 和 `after` 選項不得同時出現",
+                title=_("error"),
+                description=_("before_after_error"),
                 color=0xE74C3C,
             )
             await ctx.respond(embed=embed, ephemeral=True)
@@ -48,11 +63,15 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
-            reason=f"由 {ctx.author} 清除 - {reason}",
+            reason=_(
+                "delete_reason_template",
+                ctx=ctx,
+                reason=reason,
+            ),
         )
         embed = Embed(
-            title=f"成功刪除了 `{len(del_message)}` 則訊息!",
-            description=f"原因: {reason}",
+            title=_("done", del_message=del_message),
+            description=_("embed_description", reason=reason),
         )
         await ctx.respond(embed=embed, ephemeral=True)
 
