@@ -19,10 +19,17 @@ class BaseEventsCog(BaseCog):
         bot.log.info(f"[cyan]{bot.user}[/cyan]")
 
     @discord.Cog.listener()
+    async def on_command(self, ctx: Context):
+        self.bot.log.info(
+            f"[{ctx.guild.name}] [{ctx.channel.name}] "
+            f"{ctx.author} +msg-command+ -> {ctx.command.name}"
+        )
+
+    @discord.Cog.listener()
     async def on_application_command(self, ctx: ApplicationContext):
         self.bot.log.info(
             f"[{ctx.guild.name}] [{ctx.channel.name}] "
-            f"{ctx.author} -> {ctx.command.name}"
+            f"{ctx.author} +slash-command+ -> {ctx.command.name}"
         )
 
     @discord.Cog.listener()

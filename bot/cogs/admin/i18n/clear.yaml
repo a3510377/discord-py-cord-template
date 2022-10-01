@@ -53,7 +53,7 @@ purge:
       error: 錯誤!
       before_after_error: "`before` 和 `after` 選項不得同時出現"
       delete_reason_template: 由 {ctx.author} 清除 - {reason}
-      done: 成功刪除了 `{len(del_message)}` 則訊息!
+      done: 成功刪除了 `{del_message}` 則訊息!
       embed_description: "原因: {reason}"
   en-US:
     description: Delete Many Messages

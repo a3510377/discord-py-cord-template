@@ -70,7 +70,7 @@ class ClearCog(BaseCog):
             ),
         )
         embed = Embed(
-            title=_("done", del_message=del_message),
+            title=_("done", del_message=len(del_message)),
             description=_("embed_description", reason=reason),
         )
         await ctx.respond(embed=embed, ephemeral=True)

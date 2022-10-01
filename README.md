@@ -66,13 +66,14 @@ pip install -r requirements/dev.txt
 │   ├───core # 核心功能
 │   │   ├ bot.py # 機器人核心程式
 │   │   ├ events.py # 核心事件
+│   │   ├ commands.py # 核心指令
 │   │   ├ i18n.py # 多語言支持
 │   │   ├ logging.py # 日誌支持
 │   │   └ # 可依自己需求添加其他檔案
 │   ├───utils # 小型函數庫
 │   │   ├ __init__.py  # 程式導入點
-│   │   ├ util.py # 雜項函數
 │   │   ├ base.py # 自訂擴展
+│   │   ├ util.py # 雜項函數
 │   │   └ # 可依自己需求添加其他檔案
 │   ├ __init__.py # 主程式導入點
 │   └ __main__.py # 主程式進入點
@@ -95,6 +96,42 @@ pip install -r requirements/dev.txt
 | :------: | --------------- |
 |  black   | python 格式化器 |
 |  flake8  | python 程式統一 |
+
+## 內建功能
+
+### 事件
+
+1. `on_ready`
+  打印出開機訊息
+2. `on_application_command`
+  slash_command 日誌
+3. `on_application_command_error`
+  slash_command 錯誤日誌
+4. `on_command`
+  message command 日誌
+5. `on_command_error`
+  message command 錯誤日誌
+
+### 指令
+
+#### slash_command
+
+1. `delete`
+  清除特定訊息。( 從訊息 ID )
+  用戶執行權限需求 -> `manage_messages`
+2. `purge`
+  清除多個訊息。
+  用戶執行權限需求 -> `manage_messages`
+
+#### message command
+
+1. `reload`
+  重加載所有 `cog`
+  用戶執行權限需求 -> `bot owner`
+
+#### context_menus
+
+無
 
 ## 開發人員
 
