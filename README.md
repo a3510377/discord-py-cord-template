@@ -22,11 +22,18 @@ Python Discord Bot(py-cord版) 基礎骨架
 
 ### 📥 安裝
 
-- **`pipenv`**: 使用外部函數庫 [pipenv](https://pypi.org/project/pipenv/)
+- **`python`**: 將函數庫直接下載到全域
+
+  - 生產中使用
 
   ```sh
-  pip install pipenv # 安裝 pipenv
-  pipenv install
+  pip install -r requirements/prod.txt
+  ```
+
+  - 開發中使用
+
+  ```sh
+  pip install -r requirements/dev.txt
   ```
 
 - **`venv`**: 使用 python 內建函數庫 [venv](https://docs.python.org/zh-tw/3/tutorial/venv.html)
@@ -43,18 +50,11 @@ Python Discord Bot(py-cord版) 基礎骨架
   pip install -r requirements/dev.txt
   ```
 
-- **`python`**: 將函數庫直接下載到全域
-
-  - 生產中使用
+- **`pipenv`**: 使用外部函數庫 [pipenv](https://pypi.org/project/pipenv/)
 
   ```sh
-  pip install -r requirements/prod.txt
-  ```
-
-  - 開發中使用
-
-  ```sh
-  pip install -r requirements/dev.txt
+  pip install pipenv # 安裝 pipenv
+  pipenv install
   ```
 
 ### 配置
