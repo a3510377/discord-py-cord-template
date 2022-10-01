@@ -1,8 +1,10 @@
-import discord
-from discord import ApplicationContext, DiscordException
 from datetime import datetime
 
-from bot import BaseCog, Bot
+import discord
+from discord import DiscordException
+from discord.ext.commands import CommandError, CommandNotFound
+
+from bot import BaseCog, Bot, Context, ApplicationContext
 
 
 class BaseEventsCog(BaseCog):
@@ -22,6 +24,13 @@ class BaseEventsCog(BaseCog):
             f"[{ctx.guild.name}] [{ctx.channel.name}] "
             f"{ctx.author} -> {ctx.command.name}"
         )
+
+    @discord.Cog.listener()
+    async def on_command_error(self, ctx: Context, error: CommandError):
+        if isinstance(error, CommandNotFound):
+            return
+
+        print(error)
 
     @discord.Cog.listener()
     async def on_application_command_error(

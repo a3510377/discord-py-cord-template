@@ -113,7 +113,7 @@ async def command_before_invoke(ctx: Union[Context, ApplicationContext]):
     )
 
 
-def load_i18n_file_from_file(path: Union[str, Path]) -> Optional[I18nFileDataType]:
+def load_i18n_file_from_file(path: Union[str, Path]) -> I18nFileDataType:
     if not (path := Path(path)).is_file():
         raise ValueError("path must be a file")
 
@@ -133,6 +133,8 @@ def load_i18n_file_from_file(path: Union[str, Path]) -> Optional[I18nFileDataTyp
             return json.loads(data)
 
         return yaml.safe_load(data)
+
+    return {}
 
 
 def load_i18n_file(

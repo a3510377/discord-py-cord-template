@@ -1,5 +1,6 @@
 import inspect
-from typing import Any, Callable, Optional, TypeVar
+from pathlib import Path
+from typing import Any, Callable, Optional, TypeVar, Union
 
 
 __all__ = (
@@ -49,3 +50,14 @@ def set_dict_default(
             value.__dict__[key] = default
 
     return value
+
+
+def get_absolute_name_from_path(filename: Union[str, Path]) -> str:
+    from bot import __config_path__
+
+    paths = [(p := Path(filename).resolve()).stem]
+
+    while not __config_path__.samefile(p := p.parent):
+        paths.append(p.stem)
+
+    return ".".join(reversed(paths))
