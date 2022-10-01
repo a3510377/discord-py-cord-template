@@ -52,6 +52,7 @@ def get(
     default: Optional[str] = None,
     *,
     lang: str,
+    default_lang: Optional[str] = None,
     **kwargs: Any,
 ) -> Optional[str]:
     ...
@@ -68,28 +69,36 @@ def get(
     default: Optional[str] = None,
     *,
     lang: Optional[str] = None,
+    default_lang: Optional[str] = None,
     **kwargs: Any,
 ) -> Union[Optional[str], Dict[str, Union[str, List[Any]]]]:
-    if lang and (local := locals.get(lang)):
-        keys = key.split(".")
-        value = local.get("messages")
+    def get_lang_str(lang: str):
+        if local := locals.get(lang):
+            keys = key.split(".")
+            value = local.get("messages")
 
-        for k in keys:
-            if isinstance(value, dict) and (value := value.get(k)):
-                pass
-            else:
-                value = key if default is None else default
+            for k in keys:
+                if isinstance(value, dict) and (value := value.get(k)):
+                    pass
+                else:
+                    value = key if default is None else default
 
-        return value.format_map(kwargs)
+            return (value or value).format_map(kwargs)
+
+    if lang:
+        if not (data := get_lang_str(lang)) and lang != default_lang:
+            return get_lang_str(default_lang)
+        return data
 
     output: Dict[str, Union[str, List[Any]]] = {}
 
     def get_key(key: List[str], value: MessagesType):
         if isinstance(value, (list, str)):
             output[key.join(".")] = value
-        else:
-            for k, data in value.items():
-                get_key([*key, k], data)
+            return
+
+        for k, data in value.items():
+            get_key([*key, k], data)
 
     get_key([], locals)
     return output
