@@ -12,9 +12,7 @@ from typing import (
 )
 
 import discord
-from discord import (
-    ApplicationContext as DiscordApplicationContext,
-)
+from discord import ApplicationContext as DiscordApplicationContext
 from discord.ext.commands import Context as DiscordContext
 
 
