@@ -1,13 +1,23 @@
 # discord-py-cord-template
 
 Python Discord Bot(py-cord版) 基礎骨架
+[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 
-## 食用方法
+## ⚡ Introduction 簡介
 
-食用要求:
+提供一個基本骨架，快速的開始一隻新的機器人開發
 
-1. python 版本 >= 3.8
-2. ~~空腹 ( 怕你吃到吐 ) 😑~~
+- Cog 架構
+- For (初學者/開發者)
+- Bot 指令/類別/功能 分離
+- I18n 多語言支持
+- Logging 日誌系統
+
+## 📥 食用方法
+
+> 食用要求:
+> python 版本 `>= 3.8`
+> ~~空腹 ( 怕你吃到吐 ) 😑~~
 
 ### pipenv
 
@@ -50,9 +60,10 @@ pip install -r requirements/prod.txt
 pip install -r requirements/dev.txt
 ```
 
-## 檔案結構
+## 🔩 Folder structure 資料夾結構
 
 ```yml
+/ # 更目錄
 ├─.vscode # 編輯器設定
 ├─bot # 原代碼資料夾
 │ ├─cogs # cog 資料夾
