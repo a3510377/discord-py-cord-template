@@ -1,5 +1,12 @@
-import gettext
+from typing import Optional, Any
 
-# cat = gettext.translation("test", "./data", ["zh_TW", "en_US"])
-_ = gettext.gettext
-print(_("hello world"))
+
+def get(
+    locals: str,
+    key: str,
+    default: Optional[str] = None,
+    *,
+    lang: str,
+    **kwargs: Any,
+) -> Optional[str]:
+    ...

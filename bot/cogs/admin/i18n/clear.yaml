@@ -10,8 +10,8 @@ delete:
         # name: reason
         description: "原因( 默認: 無原因 )"
     messages:
-      a: "a"
-      b: "b"
+      a: "m: a"
+      b: "m: b"
       c:
         a: "c-a"
         b: "c-b"
@@ -26,8 +26,8 @@ delete:
         # name: reason
         description: "reason( default: 無原因 )"
     messages:
-      a: "a"
-      b: "b"
+      a: "m: a"
+      b: "m: b"
       c:
         a: "c-a"
         b: "c-b"
@@ -52,8 +52,8 @@ purge:
         # name: after
         description: 刪除以這則訊息以後的訊息
     messages:
-      a: "a"
-      b: "b"
+      a: "m: a"
+      b: "m: b"
       c:
         a: "c-a"
         b: "c-b"
@@ -77,8 +77,8 @@ purge:
         # name: after
         description: 刪除以這則訊息以後的訊息
     messages:
-      a: "a"
-      b: "b"
+      a: "m: a"
+      b: "m: b"
       c:
         a: "c-a"
         b: "c-b"

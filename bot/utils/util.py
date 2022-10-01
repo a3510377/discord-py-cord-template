@@ -1,12 +1,18 @@
+import inspect
 from typing import Any, Callable, Optional, TypeVar
 
 
 __all__ = (
+    "fix_doc",
     "has_value",
     "set_dict_default",
 )
 
 T = TypeVar("T")
+
+
+def fix_doc(*doc: str):
+    return inspect.cleandoc("\n".join(doc))
 
 
 def has_value(

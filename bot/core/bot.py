@@ -1,4 +1,3 @@
-import inspect
 import logging
 import os
 import platform
@@ -8,12 +7,16 @@ from typing import Any, Optional, Union
 import discord
 
 from bot import __version__
-from bot.core.i18n import I18n
+from bot.utils import fix_doc
+from bot.core.i18n import (
+    command_before_invoke as i18n_before_invoke,
+    set_cog as i18n_set_cog,
+)
 
 log = logging.getLogger("bot")
 
 
-class Bot(discord.Bot, object):
+class Bot(discord.Bot):
     __version__ = __version__
 
     def __init__(self, *args, dev: bool = False, **kwargs):
@@ -24,7 +27,7 @@ class Bot(discord.Bot, object):
 
         super().__init__(*args, **kwargs)
 
-        self.before_invoke(I18n.before_invoke)
+        self.before_invoke(i18n_before_invoke)
 
         self.load_extension("bot.core.events")
         self.load_extension("bot.cogs", recursive=True)
@@ -49,14 +52,11 @@ class Bot(discord.Bot, object):
     def add_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
         if isinstance(cog, discord.Cog):
             # https://discord.com/developers/docs/reference#locales
-            I18n.set_cog(cog)
+            i18n_set_cog(cog)
         super().add_cog(cog, override=override)
 
-    def fix_doc(self, *doc: str):
-        return inspect.cleandoc("\n".join(doc))
-
     def run(self, *args: Any, **kwargs: Any):
-        for msg in self.fix_doc(
+        for msg in fix_doc(
             f"""
             [red]python version: [/red][cyan]{platform.python_version()}[/cyan]
             [red]py-cord version: [/red][cyan]{discord.__version__}[/cyan]

@@ -1,7 +1,7 @@
 import discord
-from discord import Embed, ApplicationContext, Option, Message, Member
+from discord import Embed, Option, Message, Member
 
-from bot import BaseCog, Bot
+from bot import BaseCog, Bot, ApplicationContext
 
 
 class ClearCog(BaseCog):
@@ -30,10 +30,6 @@ class ClearCog(BaseCog):
         before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
         after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
     ):
-        print(ctx._("a"))
-        print(ctx._("b"))
-        print(ctx._("c.a"))
-        print(ctx._("c.a.a"))
         if before and after:
             embed = Embed(
                 title="錯誤!",
