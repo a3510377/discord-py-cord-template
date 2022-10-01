@@ -1,7 +1,8 @@
+[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
+
 # discord-py-cord-template
 
 Python Discord Bot(py-cord版) 基礎骨架
-[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 
 ## ⚡ Introduction 簡介
 
