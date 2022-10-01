@@ -55,11 +55,11 @@ class BaseCog(discord.Cog, metaclass=BaseCogMeta):
 
 class I18nContext:
     @overload
-    def get(self) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
+    def _(self) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
         ...
 
     @overload
-    def get(self, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
+    def _(self, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
         ...
 
     @overload
