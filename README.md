@@ -52,7 +52,7 @@ pip install -r requirements/dev.txt
 
 ## 檔案結構
 
-```python
+```yml
 ├─.vscode # 編輯器設定
 ├─bot # 原代碼資料夾
 │ ├─cogs # cog 資料夾
