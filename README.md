@@ -53,32 +53,32 @@ pip install -r requirements/dev.txt
 ## 檔案結構
 
 ```python
-├───.vscode # 編輯器設定
-├───bot # 原代碼資料夾
-│   ├───cogs # cog 資料夾
-│   │   ├───admin # 管理類 cog 存放
-│   │   │   ├───i18n # 多語言資料
-│   │   │   │   ├ clear.yaml # 給予上層 clear.py 的多語言檔案
-│   │   │   │   └ # [上層 cog 存放處檔案名].{yaml,yml,json}
-│   │   │   ├ clear.py # 清除訊息指令程式
-│   │   │   └ # 您其它的 cog 檔案 ( 請模仿 ./clear.py 的檔案架構 ) 
-│   │   └─── # 您其它的 cog 資料夾 ( 請模仿 ./admin 的資料夾結構 )
-│   ├───core # 核心功能
-│   │   ├ bot.py # 機器人核心程式
-│   │   ├ events.py # 核心事件
-│   │   ├ commands.py # 核心指令
-│   │   ├ i18n.py # 多語言支持
-│   │   ├ logging.py # 日誌支持
-│   │   └ # 可依自己需求添加其他檔案
-│   ├───utils # 小型函數庫
-│   │   ├ __init__.py  # 程式導入點
-│   │   ├ base.py # 自訂擴展
-│   │   ├ util.py # 雜項函數
-│   │   └ # 可依自己需求添加其他檔案
-│   ├ __init__.py # 主程式導入點
-│   └ __main__.py # 主程式進入點
-└───logs # 日誌存放
-    └ [filename].log # 日誌
+├─.vscode # 編輯器設定
+├─bot # 原代碼資料夾
+│ ├─cogs # cog 資料夾
+│ │ ├─admin # 管理類 cog 存放
+│ │ │ ├─i18n # 多語言資料
+│ │ │ │ ├ clear.yaml # 給予上層 clear.py 的多語言檔案
+│ │ │ │ └ # [上層 cog 存放處檔案名].{yaml,yml,json}
+│ │ │ ├ clear.py # 清除訊息指令程式
+│ │ │ └ # 您其它的 cog 檔案 ( 請模仿 ./clear.py 的檔案架構 ) 
+│ │ └─ # 您其它的 cog 資料夾 ( 請模仿 ./admin 的資料夾結構 )
+│ ├─core # 核心功能
+│ │ ├ bot.py # 機器人核心程式
+│ │ ├ events.py # 核心事件
+│ │ ├ commands.py # 核心指令
+│ │ ├ i18n.py # 多語言支持
+│ │ ├ logging.py # 日誌支持
+│ │ └ # 可依自己需求添加其他檔案
+│ ├─utils # 小型函數庫
+│ │ ├ __init__.py  # 程式導入點
+│ │ ├ base.py # 自訂擴展
+│ │ ├ util.py # 雜項函數
+│ │ └ # 可依自己需求添加其他檔案
+│ ├ __init__.py # 主程式導入點
+│ └ __main__.py # 主程式進入點
+└─logs # 日誌存放
+   └ [filename].log # 日誌
 ```
 
 ## 使用函數庫
