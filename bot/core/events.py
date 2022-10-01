@@ -2,7 +2,7 @@ from datetime import datetime
 
 import discord
 from discord import DiscordException
-from discord.ext.commands import CommandError, CommandNotFound
+from discord.ext.commands import CommandError, CommandNotFound, NotOwner
 
 from bot import BaseCog, Bot, Context, ApplicationContext
 
@@ -27,10 +27,10 @@ class BaseEventsCog(BaseCog):
 
     @discord.Cog.listener()
     async def on_command_error(self, ctx: Context, error: CommandError):
-        if isinstance(error, CommandNotFound):
+        if isinstance(error, (CommandNotFound, NotOwner)):
             return
 
-        print(error)
+        self.log.error(error)
 
     @discord.Cog.listener()
     async def on_application_command_error(
