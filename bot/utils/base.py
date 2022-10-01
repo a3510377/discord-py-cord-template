@@ -71,7 +71,7 @@ class I18nContext:
 
     # typeof: import bot.core.i18n from command_before_invoke
     def _():
-        pass
+        raise NotImplementedError
 
 
 class ApplicationContext(I18nContext, DiscordApplicationContext):
