@@ -65,6 +65,8 @@ class I18nContext:
         self,
         key: str,
         default: Optional[str] = None,
+        *,
+        default_lang: Optional[str] = None,
         **kwargs: str,
     ) -> Optional[str]:
         ...

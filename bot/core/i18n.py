@@ -117,8 +117,12 @@ async def command_before_invoke(ctx: Union[Context, ApplicationContext]):
         else ctx.guild.preferred_locale
     ) or bot.base_lang
 
-    ctx.__dict__.update(
-        {"_": lambda *args, **kwargs: get(locals, *args, lang=locale, **kwargs)}
+    ctx.__dict__["_"] = lambda *args, **kwargs: get(
+        locals,
+        *args,
+        lang=locale,
+        default_lang=kwargs.get("default_lang", bot.base_lang),
+        **kwargs,
     )
 
 
