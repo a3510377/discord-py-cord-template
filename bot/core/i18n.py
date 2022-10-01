@@ -59,7 +59,12 @@ def get(
 
 
 @overload
-def get(locals: LocalsI18nDataType) -> Dict[str, Union[str, List[Any]]]:
+def get(locals: LocalsI18nDataType) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
+    ...
+
+
+@overload
+def get(locals: LocalsI18nDataType, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
     ...
 
 
@@ -71,9 +76,13 @@ def get(
     lang: Optional[str] = None,
     default_lang: Optional[str] = None,
     **kwargs: Any,
-) -> Union[Optional[str], Dict[str, Union[str, List[Any]]]]:
-    def get_lang_str(lang: str):
-        if local := locals.get(lang):
+) -> Union[
+    Optional[str],
+    Dict[str, Union[str, List[Any]]],
+    Dict[str, Dict[str, Union[str, List[Any]]]],
+]:
+    def get_lang_str(lang: Optional[str]):
+        if lang and (local := locals.get(lang)):
             keys = key.split(".")
             value = local.get("messages")
 
@@ -85,23 +94,36 @@ def get(
 
             return (value or value).format_map(kwargs)
 
-    if lang:
+    # (locals, key) -> ...
+    if key:
         if not (data := get_lang_str(lang)) and lang != default_lang:
             return get_lang_str(default_lang)
         return data
 
-    output: Dict[str, Union[str, List[Any]]] = {}
+    output = {}
 
     def get_key(key: List[str], value: MessagesType):
         if isinstance(value, (list, str)):
-            output[key.join(".")] = value
+            output[".".join(key)] = value
             return
 
         for k, data in value.items():
             get_key([*key, k], data)
 
-    get_key([], locals)
-    return output
+    # (locals, local) -> ...
+    if lang:
+        get_key([], locals.get(lang))
+        return output
+
+    # (locals) -> ...
+    langs = {}
+
+    for local in locals.keys():
+        output = {}
+        get_key([], locals.get(local))
+        langs[local] = output
+
+    return langs
 
 
 async def command_before_invoke(ctx: Union[Context, ApplicationContext]):

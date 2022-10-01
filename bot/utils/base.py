@@ -54,12 +54,14 @@ class BaseCog(discord.Cog, metaclass=BaseCogMeta):
 
 
 class I18nContext:
-    # typeof: import bot.core.i18n from command_before_invoke
     @overload
-    def _(self) -> Dict[str, Union[str, List[Any]]]:
+    def get(self) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
         ...
 
-    # typeof: import bot.core.i18n from command_before_invoke
+    @overload
+    def get(self, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
+        ...
+
     @overload
     def _(
         self,
@@ -67,7 +69,7 @@ class I18nContext:
         default: Optional[str] = None,
         *,
         default_lang: Optional[str] = None,
-        **kwargs: str,
+        **kwargs: Any,
     ) -> Optional[str]:
         ...
 
