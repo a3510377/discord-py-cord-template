@@ -67,6 +67,12 @@ class Bot(commands.Bot):
             i18n_set_cog(cog)
         super().add_cog(cog, override=override)
 
+        self.log.info(f"cog {cog.__cog_name__} 加載完成")
+
+    def remove_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
+        if super().remove_cog(cog, override=override):
+            self.log.info(f"cog {cog.__cog_name__} 移除完成")
+
     def run(self, *args: Any, **kwargs: Any):
         for msg in fix_doc(
             f"""
