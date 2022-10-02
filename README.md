@@ -70,7 +70,7 @@ python -m bot
 ## 🔩 Folder structure 資料夾結構
 
 ```yml
-/ # 更目錄
+/ # 根目錄
 ├─.vscode # 編輯器設定
 ├─bot # 原代碼資料夾
 │ ├─cogs # cog 資料夾
