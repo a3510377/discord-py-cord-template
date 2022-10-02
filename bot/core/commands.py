@@ -1,35 +1,89 @@
 import inspect
+from typing import Dict
 
+import discord
+from discord import ui as Ui, ButtonStyle, Interaction, ExtensionAlreadyLoaded
 from discord.ext import commands
 
 from bot import BaseCog, Bot, ApplicationContext
+
 from bot.utils.util import get_absolute_name_from_path
 
 
+class CogConnectionView(Ui.View):
+    def __init__(self, bot: "Bot"):
+        super().__init__(timeout=None)
+
+        self.bot = bot
+
+    def get_cogs(self):
+        return [
+            get_absolute_name_from_path(inspect.getfile(cog.__class__))
+            for cog in self.bot.cogs.values()
+        ]
+
+    @Ui.button(
+        label="重載所有已加載的擴展",
+        style=ButtonStyle.green,
+        custom_id="persistent_view:cog_connection:reload_all",
+    )
+    async def reload_all(self, _: Ui.Button, interaction: Interaction):
+        done_count = 0
+        errors: Dict[str, Exception] = {}
+
+        for name in self.get_cogs():
+            try:
+                self.bot.reload_extension(name)
+                done_count += 1
+            except Exception as e:
+                errors.__setitem__(name, e)
+
+        embed = discord.Embed(
+            title="重新加載擴展",
+            description=f"成功重新加載 {done_count} 個擴展\n{len(errors)} 個錯誤",
+        )
+
+        for name, er in errors.items():
+            embed.add_field(name=name, value=str(er))
+
+        await interaction.message.edit(
+            content="",
+            embed=embed,
+            view=None,
+        )
+
+    @Ui.button(
+        label="加載 cogs 中的新擴展",
+        style=ButtonStyle.red,
+        custom_id="persistent_view:cog_connection:load_cogs",
+    )
+    async def load_cogs(self, _: Ui.Button, interaction: Interaction):
+        old_cog_count = len(self.bot.cogs)
+        errors = self.bot.load_extension("bot.cogs", recursive=True, store=True)
+        embed = discord.Embed(
+            title="加載完成",
+            description=f"共家載 {old_cog_count - len(self.bot.cogs)} 個擴展",
+        )
+
+        for name, error in errors.items():
+            if isinstance(error, ExtensionAlreadyLoaded):
+                continue
+            embed.add_field(name=name, value=error)
+
+        await interaction.message.edit(content=None, embed=embed, view=None)
+
+
 class BaseCommandsCog(BaseCog):
+    @discord.Cog.listener()
+    async def on_ready(self):
+        self.bot.add_view(CogConnectionView(self.bot))
+
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx: ApplicationContext):
-        bot = self.bot
-        errors = []
-        cogs = [
-            get_absolute_name_from_path(inspect.getfile(cog.__class__))
-            for cog in bot.cogs.values()
-        ]
-
-        cogs.remove(command_el := "bot.core.commands")
-
-        for name in cogs:
-            try:
-                bot.reload_extension(name)
-            except Exception as e:
-                errors.append(e)
-
-        bot.reload_extension(command_el)
-
         await ctx.send(
-            "reload all"
-            + (f"\n```{error_str}```" if (error_str := "\n".join(errors)) else "")
+            "請選取您要的模式",
+            view=CogConnectionView(self.bot),
         )
 
 
