@@ -59,7 +59,6 @@ class CogConnectionView(Ui.View):
         custom_id="persistent_view:cog_connection:load_cogs",
     )
     async def load_cogs(self, _: Ui.Button, interaction: Interaction):
-        print("load_cogs")
         old_cog_count = len(self.bot.cogs)
         errors = self.bot.load_extension("bot.cogs", recursive=True, store=True)
         embed = discord.Embed(
