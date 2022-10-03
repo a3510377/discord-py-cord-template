@@ -1,0 +1,12 @@
+delete:
+  zh-TW:
+    name: 上線時間
+    description: 查看機器人上線時間
+    messages:
+      embed_title: 機器人上線時間
+      description_template: "機器人上線時長: %d 天 %H 小時 %M 分鐘 %S 秒"
+  en-US:
+    description: Delete Message
+    messages:
+      embed_title: bot up time
+      description_template: "bot online time: %dD %HH %MM %SS"

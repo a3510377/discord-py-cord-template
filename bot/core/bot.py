@@ -44,6 +44,10 @@ class Bot(commands.Bot):
         self.load_extension("bot.core.commands")
         self.load_extension("bot.cogs", recursive=True)
 
+    @property
+    def uptime(self) -> Optional[datetime]:
+        return self._uptime
+
     async def get_or_fetch_user(self, user_id: Union[int, str]) -> discord.User:
         if (user := self.get_user(user_id := int(user_id))) is not None:
             return user
@@ -69,8 +73,8 @@ class Bot(commands.Bot):
 
         self.log.info(f"cog {cog.__cog_name__} 加載完成")
 
-    def remove_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
-        if super().remove_cog(cog, override=override):
+    def remove_cog(self, name: str) -> None:
+        if cog := super().remove_cog(name):
             self.log.info(f"cog {cog.__cog_name__} 移除完成")
 
     def run(self, *args: Any, **kwargs: Any):

@@ -36,6 +36,7 @@ class CogConnectionView(Ui.View):
                 self.bot.reload_extension(name)
                 done_count += 1
             except Exception as e:
+                self.bot.log.error(type(e).__name__)
                 errors.__setitem__(name, e)
 
         embed = discord.Embed(
@@ -58,6 +59,7 @@ class CogConnectionView(Ui.View):
         custom_id="persistent_view:cog_connection:load_cogs",
     )
     async def load_cogs(self, _: Ui.Button, interaction: Interaction):
+        print("load_cogs")
         old_cog_count = len(self.bot.cogs)
         errors = self.bot.load_extension("bot.cogs", recursive=True, store=True)
         embed = discord.Embed(
@@ -68,6 +70,7 @@ class CogConnectionView(Ui.View):
         for name, error in errors.items():
             if isinstance(error, ExtensionAlreadyLoaded):
                 continue
+            self.bot.log.error(error)
             embed.add_field(name=name, value=error)
 
         await interaction.message.edit(content=None, embed=embed, view=None)
