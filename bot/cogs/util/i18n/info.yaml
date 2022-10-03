@@ -9,4 +9,4 @@ uptime:
     description: Delete Message
     messages:
       embed_title: bot up time
-      description_template: "bot online time: %dD %HH %MM %SS"
+      description_template: "{days:02d}d {hours:02d}h {minutes:02d}m {seconds:02d}s"
