@@ -72,6 +72,8 @@ python -m bot
 ```yml
 / # 根目錄
 ├─.vscode # 編輯器設定
+│ ├ extensions.json # vscode 建議插劍
+│ └ settings.json # vscode 插劍設定
 ├─bot # 原代碼資料夾
 │ ├─cogs # cog 資料夾
 │ │ ├─admin # 管理類 cog 存放
@@ -95,8 +97,25 @@ python -m bot
 │ │ └ # 可依自己需求添加其他檔案
 │ ├ __init__.py # 主程式導入點
 │ └ __main__.py # 主程式進入點
-└─logs # 日誌存放
-   └ [filename].log # 日誌
+├─env # 如果您使用 venv 將會生成該資料夾存放函數庫文件
+├─logs # 日誌存放
+│ └ [filename].log # 日誌
+├─requirements # 日誌存放
+│ ├ prod.txt # 生產用函數庫使用
+│ └ dev.txt # 開發用函數庫使用
+├ .dockerignore # docker 忽略設定檔
+├ .editorconfig # editorconfig 設定檔
+├ .env # 您的機密文件
+├ .env.example # 範例機密文件
+├ .flake8 # python-flask
+├ .gitattributes # git 屬性設定
+├ .gitignore # git 文件規則設定
+├ .prettierrc.yaml # prettier 設定檔
+├ Dockerfile # Docker 編譯設定
+├ LICENSE # MIT License 希望您可以保留該文件讓大家可以更了解這個模板
+├ Pipfile # Pipenv 設定檔
+├ Pipfile.lock # Pipenv 緩存檔
+└ README.md # 本文件
 ```
 
 ## 使用函數庫

@@ -12,6 +12,5 @@
   "editor.formatOnSave": true,
   "python.analysis.diagnosticSeverityOverrides": {
     "reportMissingModuleSource": "none"
-  },
-  "commentTranslate.multiLineMerge": true
+  }
 }
