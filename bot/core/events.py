@@ -15,7 +15,7 @@ class BaseEventsCog(BaseCog):
         if bot._uptime is not None:
             return
 
-        bot._uptime = datetime.utcnow()
+        bot._uptime = datetime.now()
         bot.log.info(f"[cyan]{bot.user}[/cyan]")
 
     @discord.Cog.listener()
