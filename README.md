@@ -159,6 +159,9 @@ python -m bot
 2. `purge`
   清除多個訊息。
   用戶執行權限需求 -> `manage_messages`
+3. `uptime`
+  獲取機器人上線時長
+  用戶執行權限需求 -> `無`
 
 #### message command
 
