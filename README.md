@@ -163,7 +163,7 @@ python -m bot
   獲取機器人上線時長
   用戶執行權限需求 -> `無`
 
-#### message command
+#### message_command
 
 1. `reload`
   重加載所有 `cog`
