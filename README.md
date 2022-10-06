@@ -17,8 +17,9 @@ Python Discord Bot(py-cord版) 基礎骨架
 ## 食用方法
 
 > 食用要求:
-> [python](https://www.python.org/) 版本 `>= 3.8`
-> ~~空腹 ( 怕你吃到吐 ) 😑~~
+>
+> 1. [python](https://www.python.org/) 版本 `>= 3.8`
+> 2. ~~空腹 ( 怕你吃到吐 ) 😑~~
 
 ### 📥 安裝
 
