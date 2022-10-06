@@ -108,7 +108,7 @@ python -m bot
 ├ .editorconfig # editorconfig 設定檔
 ├ .env # 您的機密文件
 ├ .env.example # 範例機密文件
-├ .flake8 # python-flask
+├ .flake8 # python-flake8
 ├ .gitattributes # git 屬性設定
 ├ .gitignore # git 文件規則設定
 ├ .prettierrc.yaml # prettier 設定檔
