@@ -19,7 +19,7 @@ data = r.json()
 
 def set_contributors_xy(
     index: int,
-    max: int = 2,
+    max: int = 15,
     padding: int = 5,
     height_width: int = 64,
 ):

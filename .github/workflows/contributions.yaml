@@ -28,7 +28,7 @@ jobs:
           git init
           git add -f contributors.svg
           git commit -m "${{ github.event.head_commit.message }}"
-          git push -f https://_:"$token"@github.com/"$repository".git "$ref_name":assets
+          git push -f https://_:"$token"@github.com/"$repository".git "$ref_name":gh-pages
         shell: bash
         env:
           repository: ${{ github.repository }}
