@@ -25,7 +25,7 @@ Python Discord Bot(Pycord版) 基礎骨架
       - [message_command](#message_command)
       - [context_menus](#context_menus)
       - [user_commands](#user_commands)
-    - [貢獻者](#貢獻者)
+  - [貢獻者](#貢獻者)
   - [License](#license)
 
 ---
@@ -52,30 +52,34 @@ Python Discord Bot(Pycord版) 基礎骨架
 - **`pip`**: 將函式庫直接下載到全域
 
   - 生產中使用
-    ```ps
+
+    ```sh
     pip install -r requirements/prod.txt
     ```
 
   - 開發中使用
-    ```ps
+
+    ```sh
     pip install -r requirements/dev.txt
     ```
 
 - **`venv`**: 使用 python 內建函式庫 [venv](https://docs.python.org/zh-tw/3/tutorial/venv.html)
 
   - 生產中使用
-    ```ps
+
+    ```sh
     pip install -r requirements/prod.txt
     ```
 
   - 開發中使用
-    ```ps
+
+    ```sh
     pip install -r requirements/dev.txt
     ```
 
 - **`pipenv`**: 使用外部函式庫 [pipenv](https://pypi.org/project/pipenv/)
 
-  ```ps
+  ```sh
   pip install pipenv # 安裝 pipenv
   pipenv install
   ```
@@ -86,7 +90,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 ### 執行
 
-```ps
+```sh
 python -m bot
 ```
 
@@ -200,7 +204,7 @@ python -m bot
 
 無
 
-### 貢獻者
+## 貢獻者
 
 這個項目的存在要感謝所有做出貢獻的人。
 <a href="https://github.com/a3510377/discord-py-cord-template/graphs/contributors">
