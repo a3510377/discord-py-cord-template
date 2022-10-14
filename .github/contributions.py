@@ -26,7 +26,7 @@ if not BOT:
     data = list(
         filter(
             lambda el: el["type"] != "Bot" and "actions-user" not in el["login"],
-            r.json(),
+            data,
         )
     )
 
