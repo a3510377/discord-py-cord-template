@@ -65,6 +65,10 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 - **`venv`**: 使用 python 內建函式庫 [venv](https://docs.python.org/zh-tw/3/tutorial/venv.html)
 
+  ```sh
+  python -m venv env
+  ```
+
   - 生產中使用
 
     ```sh
@@ -207,9 +211,8 @@ python -m bot
 ## 貢獻者
 
 這個項目的存在要感謝所有做出貢獻的人。
-<a href="https://github.com/a3510377/discord-py-cord-template/graphs/contributors">
-  ![contributors](./.github/contributors.svg "非常感謝 ~~")
-</a>
+
+![![contributors](./.github/contributors.svg "非常感謝 ~~")](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
 
 ## License
 
