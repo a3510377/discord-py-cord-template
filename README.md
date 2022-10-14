@@ -208,7 +208,7 @@ python -m bot
 
 這個項目的存在要感謝所有做出貢獻的人。
 <a href="https://github.com/a3510377/discord-py-cord-template/graphs/contributors">
-
+  ![contributors](./.github/contributors.svg "非常感謝 ~~")
 </a>
 
 ## License

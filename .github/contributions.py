@@ -1,3 +1,4 @@
+import base64
 import os
 import requests
 
@@ -31,6 +32,14 @@ def set_contributors_xy(
     return f'x="{x}" y="{y}"'
 
 
+def get_image_base64(url: str):
+    response = requests.get(url)
+    return (
+        f"data:{response.headers['Content-Type']};"
+        f"base64,{base64.b64encode(response.content)}"
+    )
+
+
 svg = (
     '<svg xmlns="http://www.w3.org/2000/svg" '
     'xmlns:xlink="http://www.w3.org/1999/xlink">'
@@ -38,7 +47,7 @@ svg = (
     + "".join(
         f'<a xlink:href="{da["html_url"]}" target="_blank" rel="nofollow sponsored">'
         f"<image {set_contributors_xy(index)} "
-        f'width="64" height="64" xlink:href="{da["avatar_url"]}" '
+        f'width="64" height="64" xlink:href="{get_image_base64(da["avatar_url"])}" '
         'clip-path="inset(0% round 50%)"/>'
         "</a>"
         for index, da in enumerate(data)
@@ -46,5 +55,5 @@ svg = (
     + "</svg>"
 )
 
-with open("./contributors.svg", "w", encoding="utf-8") as file:
+with open("./.github/contributors.svg", "w", encoding="utf-8") as file:
     file.write(svg)
