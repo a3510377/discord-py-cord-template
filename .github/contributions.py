@@ -7,6 +7,7 @@ repository = os.getenv("repository", "a3510377/discord-py-cord-template")
 repo_owner, repo_name = repository.split("/")
 
 
+BOT = False
 MAX = 15
 PADDING = 5
 HEIGHT_WIDTH = 64
@@ -20,6 +21,14 @@ r = requests.get(
 )
 
 data = r.json()
+
+if not BOT:
+    data = list(
+        filter(
+            lambda el: el["type"] != "Bot" and "actions-user" not in el["login"],
+            r.json(),
+        )
+    )
 
 
 def make_svg():
