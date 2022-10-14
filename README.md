@@ -6,27 +6,27 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 ---
 
-## 目錄
+## 🏠 目錄
 
 - [Discord Pycord Template](#discord-pycord-template)
-  - [目錄](#目錄)
+  - [🏠 目錄](#-目錄)
   - [⚡ Introduction 簡介](#-introduction-簡介)
-  - [食用方法](#食用方法)
+  - [🚀 食用方法](#-食用方法)
     - [📥 安裝](#-安裝)
-    - [配置](#配置)
-    - [執行](#執行)
+    - [🔧 配置](#-配置)
+    - [〽️ 執行](#️-執行)
   - [🔩 Folder structure 資料夾結構](#-folder-structure-資料夾結構)
-  - [使用函式庫](#使用函式庫)
-    - [開發中使用](#開發中使用)
-  - [內建功能](#內建功能)
-    - [事件](#事件)
-    - [指令](#指令)
+  - [📜 使用函式庫](#-使用函式庫)
+    - [📄 開發中使用](#-開發中使用)
+  - [✏️ 內建功能](#️-內建功能)
+    - [📕 事件](#-事件)
+    - [📗 指令](#-指令)
       - [slash_command](#slash_command)
       - [message_command](#message_command)
       - [context_menus](#context_menus)
       - [user_commands](#user_commands)
-  - [貢獻者](#貢獻者)
-  - [License](#license)
+  - [📰 貢獻者](#-貢獻者)
+  - [📝 License](#-license)
 
 ---
 
@@ -40,7 +40,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 - I18n 多語言支持
 - Logging 日誌系統
 
-## 食用方法
+## 🚀 食用方法
 
 > 食用要求:
 >
@@ -88,11 +88,11 @@ Python Discord Bot(Pycord版) 基礎骨架
   pipenv install
   ```
 
-### 配置
+### 🔧 配置
 
 將 `.env.example`  重新命名為 `.env` 並自行修改設定檔裡的資料。
 
-### 執行
+### 〽️ 執行
 
 ```sh
 python -m bot
@@ -102,36 +102,36 @@ python -m bot
 
 ```yml
 /                     # 根目錄
-├ .vscode               # 編輯器設定
+├ 📂 .vscode               # 編輯器設定
 │ ├ extensions.json       # vscode 建議插件
 │ └ settings.json         # vscode 插件設定
-├ bot                   # 原代碼資料夾
-│ ├ cogs                  # cog 資料夾
-│ │ ├ admin                 # 管理類 cog 存放
-│ │ │ ├ i18n                  # 多語言資料
+├ 📂 bot                   # 原代碼資料夾
+│ ├ 📂 cogs                  # cog 資料夾
+│ │ ├ 📂 admin                 # 管理類 cog 存放
+│ │ │ ├ 📂 i18n                  # 多語言資料
 │ │ │ │ ├ clear.yaml            # 給予上層 clear.py 的多語言檔案
 │ │ │ │ └ [filename].yaml       # [上層 cog 存放處檔案名].{yaml,yml,json}
 │ │ │ ├ clear.py              # 清除訊息指令程式
 │ │ │ └ [filename].py         # 其它的 cog 檔案 （請遵循 ./clear.py 的檔案架構）
-│ │ └ [cog dir]             # 其它的 cog 資料夾 （請遵循 ./admin 的資料夾結構）
-│ ├ core                  # 核心功能
+│ │ └ 📂 [cog dir]             # 其它的 cog 資料夾 （請遵循 ./admin 的資料夾結構）
+│ ├ 📂 core                  # 核心功能
 │ │ ├ bot.py                # 機器人核心程式
 │ │ ├ events.py             # 核心事件
 │ │ ├ commands.py           # 核心指令
 │ │ ├ i18n.py               # 多語言支持
 │ │ ├ logging.py            # 日誌支持
 │ │ └                       # 可依自己需求添加其他檔案
-│ ├ utils                 # 小型函式庫
+│ ├ 📂 utils                 # 小型函式庫
 │ │ ├ __init__.py           # 程式導入點
 │ │ ├ base.py               # 自訂擴展
 │ │ ├ util.py               # 雜項函式
 │ │ └                       # 可依自己需求添加其他檔案
 │ ├ __init__.py           # 主程式導入點
 │ └ __main__.py           # 主程式進入點
-├ env                   # 如使用 venv 將會生成該資料夾存放函式庫文件
-├ logs                  # 日誌存放
+├ 📂 env                   # 如使用 venv 將會生成該資料夾存放函式庫文件
+├ 📂 logs                  # 日誌存放
 │ └ [filename].log        # 日誌
-├ requirements          # 日誌存放
+├ 📂 requirements          # 日誌存放
 │ ├ prod.txt              # 生產用函式庫使用
 │ └ dev.txt               # 開發用函式庫使用
 ├ .dockerignore         # docker 忽略設定檔
@@ -149,7 +149,7 @@ python -m bot
 └ README.md             # 本文件
 ```
 
-## 使用函式庫
+## 📜 使用函式庫
 
 | 函式庫名        | 描述                  |
 | --------------- | --------------------- |
@@ -158,16 +158,16 @@ python -m bot
 | `rich`          | 日誌寫入與顯示        |
 | `pyyaml`        | 讀取 `.yaml` 格式文件 |
 
-### 開發中使用
+### 📄 開發中使用
 
 | 函式庫名 | 描述            |
 | -------- | --------------- |
 | `black`  | Python 格式化器 |
 | `flake8` | Python 程式統一 |
 
-## 內建功能
+## ✏️ 內建功能
 
-### 事件
+### 📕 事件
 
 1. `on_ready`  
   打印出開機訊息  
@@ -180,7 +180,7 @@ python -m bot
 5. `on_command_error`  
   message command 錯誤日誌  
 
-### 指令
+### 📗 指令
 
 #### slash_command
 
@@ -208,12 +208,14 @@ python -m bot
 
 無
 
-## 貢獻者
+<!-- ## 🔗 相關連結 -->
+
+## 📰 貢獻者
 
 這個項目的存在要感謝所有做出貢獻的人。
 
 [![contributors](https://raw.githubusercontent.com/a3510377/discord-py-cord-template/assets/contributors.svg)](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
 
-## License
+## 📝 License
 
 [MIT](LICENSE) © a3510377
