@@ -3,23 +3,20 @@ name: Generate contributions
 on: [push]
 
 jobs:
-  contribute:
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.9"
+          cache: "pip"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+        run: pip install requests
+
+      - name: Generate contributions
+        run: python ./.github/contributions.py
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
@@ -35,7 +32,7 @@ jobs:
         shell: bash
         env:
           repository: ${{ github.repository }}
-          ref_name: ${{ github.ref_name }}
+          ref_name: master
           token: ${{ secrets.GITHUB_TOKEN }}
           user_name: GitHub Action
           user_email: action@github.com
