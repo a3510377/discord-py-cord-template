@@ -25,7 +25,8 @@ Python Discord Bot(Pycord版) 基礎骨架
       - [message_command](#message_command)
       - [context_menus](#context_menus)
       - [user_commands](#user_commands)
-  - [開發人員](#開發人員)
+    - [貢獻者](#貢獻者)
+  - [License](#license)
 
 ---
 
@@ -142,16 +143,16 @@ python -m bot
 
 ## 使用函式庫
 
-| 函式庫名         | 描述                 |
-| --------------- | ------------------- |
-| `py-cord`       | `Discord API` 支援  |
-| `python-dotenv` | 讀取 `.env` 檔案     |
+| 函式庫名        | 描述                  |
+| --------------- | --------------------- |
+| `py-cord`       | `Discord API` 支援    |
+| `python-dotenv` | 讀取 `.env` 檔案      |
 | `rich`          | 日誌寫入與顯示        |
 | `pyyaml`        | 讀取 `.yaml` 格式文件 |
 
 ### 開發中使用
 
-| 函式庫名  | 描述            |
+| 函式庫名 | 描述            |
 | -------- | --------------- |
 | `black`  | Python 格式化器 |
 | `flake8` | Python 程式統一 |
@@ -199,14 +200,13 @@ python -m bot
 
 無
 
-## 開發人員
+### 貢獻者
 
-<div class="dev">
+這個項目的存在要感謝所有做出貢獻的人。
+<a href="https://github.com/a3510377/discord-py-cord-template/graphs/contributors">
 
-[![](https://cdn.discordapp.com/avatars/688181698822799414/f6534feffc3f15cf439cb2fdd579aab5.webp?size=128)](https://github.com/a3510377)
-</div>
+</a>
 
-<style>
-  .dev a {border-radius: 50%;}
-  .dev img {width: 100px}
-</style>
+## License
+
+[MIT](LICENSE) © a3510377
