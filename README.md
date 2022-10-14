@@ -208,11 +208,11 @@ python -m bot
 
 無
 
-## [貢獻者](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
+## 貢獻者
 
 這個項目的存在要感謝所有做出貢獻的人。
 
-![contributors](https://raw.githubusercontent.com/a3510377/discord-py-cord-template/assets/contributors.svg)
+[![contributors](https://raw.githubusercontent.com/a3510377/discord-py-cord-template/assets/contributors.svg)](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
 
 ## License
 
