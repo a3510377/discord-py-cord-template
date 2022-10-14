@@ -212,7 +212,7 @@ python -m bot
 
 這個項目的存在要感謝所有做出貢獻的人。
 
-![![contributors](./.github/contributors.svg "非常感謝 ~~")](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
+![![contributors](https://raw.githubusercontent.com/a3510377/discord-py-cord-template/assets/contributors.svg)](https://github.com/a3510377/discord-py-cord-template/graphs/contributors)
 
 ## License
 
