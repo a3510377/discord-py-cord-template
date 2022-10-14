@@ -36,7 +36,7 @@ def get_image_base64(url: str):
     response = requests.get(url)
     return (
         f"data:{response.headers['Content-Type']};"
-        f"base64,{base64.b64encode(response.content)}"
+        f"base64,{base64.b64encode(response.content).decode('utf-8')}"
     )
 
 
