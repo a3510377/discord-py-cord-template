@@ -45,7 +45,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 > 食用要求:
 >
 > 1. [python](https://www.python.org/) 版本 `>= 3.8`
-> 2. ~~空腹 ( 怕你吃到吐）😑~~
+> 2. ~~空腹 （怕你吃到吐）😑~~
 
 ### 📥 安裝
 
