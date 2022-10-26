@@ -1,8 +1,6 @@
 [![>=Python 3.8](https://img.shields.io/badge/python->=3.8-blue.svg)](https://www.python.org/downloads/release/)
 [![license](https://img.shields.io/github/license/a3510377/discord-py-cord-template)](./LICENSE)
 
-
-
 # Discord Pycord Template
 
 Python Discord Bot(Pycord版) 基礎骨架
