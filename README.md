@@ -3,6 +3,7 @@
 # Discord Pycord Template
 
 Python Discord Bot(Pycord版) 基礎骨架
+~~拜託給個 start 拉>>>~~
 
 ---
 
