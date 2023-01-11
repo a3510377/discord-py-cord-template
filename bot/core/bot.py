@@ -38,6 +38,7 @@ class Bot(commands.Bot):
             **kwargs,
         )
 
+        self.owner_ids = {int(id) for id in os.getenv("OWNER_IDS", "").split(",")}
         self.before_invoke(i18n_before_invoke)
 
         self.load_extension("bot.core.events")
