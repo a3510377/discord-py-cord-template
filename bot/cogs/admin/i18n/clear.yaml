@@ -38,7 +38,7 @@ purge:
         description: 輸入要刪除的訊息數量
       reason:
         name: 原因
-        description: Reason
+        description: 原因
       member:
         name: 從特定成員
         description: 要刪除的成員訊息
@@ -59,17 +59,17 @@ purge:
     description: Delete Many Messages
     args:
       count:
-        description: 輸入要刪除的訊息數量
+        description: Input the number of messages to delete.
       reason:
         description: Reason
       member:
-        description: 要刪除的成員訊息
+        description: Input the owner of messages to delete.
       before:
-        description: 刪除這則訊息以前的訊息
+        description: Delete messages before this message.
       after:
-        description: 刪除以這則訊息以後的訊息
+        description: Delete messages after this message.
     messages:
-      error: 錯誤!
+      error: Error!
       before_after_error: "The `before` and `after` options must not appear at the same time"
       done: Deleted `{len(del_message)}` messages successfully!
       default_reason: no reason
