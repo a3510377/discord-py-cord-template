@@ -5,6 +5,8 @@
 Python Discord Bot(Pycord版) 基礎骨架
 ~~拜託給個 start 拉>>>~~
 
+[建置方法 / 演示 影片](https://www.youtube.com/watch?v=SX3lpY4Zm7s)
+
 ---
 
 ## 🏠 目錄
