@@ -7,7 +7,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 ## 建置方法 / 演示 影片
 
-[![SX3lpY4Zm7s](https://img.youtube.com/vi/SX3lpY4Zm7s/maxresdefault.jpg)](https://youtu.be/SX3lpY4Zm7s)
+[![g1TC_WtCM3E](https://img.youtube.com/vi/g1TC_WtCM3E/maxresdefault.jpg)](https://youtu.be/g1TC_WtCM3E)
 
 ---
 
