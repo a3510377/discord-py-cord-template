@@ -33,6 +33,11 @@ def run(input_token: bool, dev: bool, token: str, level: List[str]):
         token = click.prompt("Token", hide_input=True)
     elif not token:
         click.echo("Please enter a token")
+        click.echo("e.x. python -m bot --token <token>")
+        click.echo(
+            "token in https://discord.com/developers/applications "
+            "> New Application > Create > Bot > Add Bot > Yes, do it!"
+        )
         return
 
     init_logging(level=level)
