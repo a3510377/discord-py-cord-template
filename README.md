@@ -5,14 +5,16 @@
 Python Discord Bot(Pycord版) 基礎骨架
 ~~拜託給個 start 拉>>>~~
 
-## 建置方法 / 演示 影片:
-[![SX3lpY4Zm7s](https://img.youtube.com/vi/SX3lpY4Zm7s/default.jpg)](https://youtu.be/SX3lpY4Zm7s)
+## 建置方法 / 演示 影片
+
+[![SX3lpY4Zm7s](https://img.youtube.com/vi/SX3lpY4Zm7s/maxresdefault.jpg)](https://youtu.be/SX3lpY4Zm7s)
 
 ---
 
 ## 🏠 目錄
 
 - [Discord Pycord Template](#discord-pycord-template)
+  - [建置方法 / 演示 影片](#建置方法--演示-影片)
   - [🏠 目錄](#-目錄)
   - [⚡ Introduction 簡介](#-introduction-簡介)
   - [🚀 食用方法](#-食用方法)
@@ -25,10 +27,10 @@ Python Discord Bot(Pycord版) 基礎骨架
   - [✏️ 內建功能](#️-內建功能)
     - [📕 事件](#-事件)
     - [📗 指令](#-指令)
-      - [slash_command](#slash_command)
-      - [message_command](#message_command)
-      - [context_menus](#context_menus)
-      - [user_commands](#user_commands)
+      - [slash\_command](#slash_command)
+      - [message\_command](#message_command)
+      - [context\_menus](#context_menus)
+      - [user\_commands](#user_commands)
   - [📰 貢獻者](#-貢獻者)
   - [📝 License](#-license)
 
