@@ -100,8 +100,16 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 ### 〽️ 執行
 
+使用 `-m` 方式執行
+
 ```sh
 python -m bot
+```
+
+或者直接使用 `python` 執行
+
+```sh
+python start.py
 ```
 
 ## 🔩 Folder structure 資料夾結構

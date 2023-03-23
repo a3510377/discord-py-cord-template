@@ -2,7 +2,7 @@ import os
 import click
 import logging
 
-from typing import List
+from typing import List, Union
 
 import dotenv
 
@@ -15,7 +15,6 @@ import dotenv
     "token",
     help="discord bot token",
     type=str,
-    default=lambda: os.getenv("DISCORD_TOKEN"),
 )
 @click.option(
     "-l",
@@ -25,9 +24,30 @@ import dotenv
     help="log level",
     type=click.Choice(logging._nameToLevel.keys(), case_sensitive=False),
 )
-def run(input_token: bool, dev: bool, token: str, level: List[str]):
+@click.option(
+    "-e",
+    "--from-env",
+    "env_path",
+    default=True,
+    help="load env file path or stop load env file",
+)
+def run(
+    input_token: bool,
+    dev: bool,
+    token: str,
+    level: List[str],
+    env_path: Union[str, bool],
+):
     from .core.logging import init_logging
     from .core.bot import Bot
+
+    if env_path is not None:
+        if isinstance(env_path, str):
+            dotenv.load_dotenv(env_path)
+        elif env_path:
+            dotenv.load_dotenv()
+
+    token = os.getenv("DISCORD_TOKEN")
 
     if input_token:
         token = click.prompt("Token", hide_input=True)
@@ -46,5 +66,4 @@ def run(input_token: bool, dev: bool, token: str, level: List[str]):
 
 
 if __name__ == "__main__":
-    dotenv.load_dotenv()
     run()
