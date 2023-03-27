@@ -9,6 +9,10 @@ Python Discord Bot(Pycord版) 基礎骨架
 
 [![g1TC_WtCM3E](https://img.youtube.com/vi/g1TC_WtCM3E/maxresdefault.jpg)](https://youtu.be/g1TC_WtCM3E)
 
+![演示](.github/assets/demo.png)
+![log 演示](.github/assets/log_domo.png)
+![I18n 演示](.github/assets/i18n.png)
+
 ---
 
 ## 🏠 目錄
