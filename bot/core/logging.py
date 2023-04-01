@@ -1,19 +1,18 @@
-import re
 import copy
-from pathlib import Path
-from datetime import timedelta, datetime
 import logging
-from logging import LogRecord, Logger, Formatter
+import re
+from datetime import datetime, timedelta
+from logging import Formatter, Logger, LogRecord
 from logging.handlers import BaseRotatingHandler
+from pathlib import Path
 from typing import Optional, Union
 
 import rich
-from rich.text import Text
-from rich.theme import Style, Theme
+from pygments.styles.monokai import MonokaiStyle
 from rich.logging import RichHandler
 from rich.syntax import PygmentsSyntaxTheme
-from pygments.styles.monokai import MonokaiStyle
-
+from rich.text import Text
+from rich.theme import Style, Theme
 
 log = logging.getLogger("bot")
 StrPath = Union[Path, str]

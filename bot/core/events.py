@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import discord
-from discord import DiscordException
-from discord.ext.commands import CommandError, CommandNotFound, NotOwner
+from discord import ApplicationContext, DiscordException
+from discord.ext.commands import CommandError, CommandNotFound, Context, NotOwner
 
-from bot import BaseCog, Bot, Context, ApplicationContext
+from bot import BaseCog, Bot
 
 
 class BaseEventsCog(BaseCog):

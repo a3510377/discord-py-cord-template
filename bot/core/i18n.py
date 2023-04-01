@@ -1,246 +1,119 @@
-import json
-import inspect
+from enum import Enum, auto
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypedDict, Union, TYPE_CHECKING, overload
+import traceback
+from contextvars import ContextVar
+from typing import Any
 
-import yaml
-import discord
-from discord import (
-    ApplicationContext,
-    SlashCommand,
-    SlashCommandGroup,
-)
-from discord.ext.commands import Context
+from discord.commands.core import valid_locales, docs
 
-from bot.utils import set_dict_default
-
-if TYPE_CHECKING:
-    from bot import Bot
+_translators: list["Translator"] = []
+_default_lang = ContextVar("_default_lang", default="zh-TW")
 
 
-class CommandI18nDataType(TypedDict):
-    name: str
-    description: str
+class _po_parse_step(Enum):
+    NULL = auto
+    MSGID = auto
+    MSGSTR = auto
 
 
-class BaseI18nDataType(TypedDict):
-    name: str
-    description: str
-    args: "CommandArgsDataType"
-    messages: "MessagesType"
+class Translator:
+    def __init__(self, name: str, locales_path: str | None = None) -> None:
+        self.name = name
+        self.locales_path = Path(
+            locales_path
+            if locales_path
+            else Path(traceback.extract_stack()[-2].filename).parent / "locales"
+        )
 
+        self.translations: dict[str, dict[str, str]] = {}  # dict[lang, dict[key, str]]
+        _translators.append(self)
+        self.load_translations()
 
-# Dict[arg_name, CommandI18nDataType]
-CommandArgsDataType = Dict[str, CommandI18nDataType]
-# Dict[lang_name, BaseI18nDataType]
-LocalsI18nDataType = Dict[str, BaseI18nDataType]
-# Dict[command_name, LocalsI18nDataType]
-I18nFileDataType = Dict[str, LocalsI18nDataType]
-LocalCommandsType = Union[SlashCommand, SlashCommandGroup]
-
-MessageListType = List[Any]
-MessageDictType = Dict[str, str]
-MessagesType = Dict[str, Union[MessageListType, MessageDictType, "MessagesType"]]
-# Dict[lang_name, CommandArgsDataType]
-CommandArgsI18nDataType = Dict[str, CommandArgsDataType]
-
-
-@overload
-def get(
-    locals: LocalsI18nDataType,
-    key: str,
-    default: Optional[str] = None,
-    *,
-    lang: str,
-    default_lang: Optional[str] = None,
-    **kwargs: Any,
-) -> Optional[str]:
-    ...
-
-
-@overload
-def get(locals: LocalsI18nDataType) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
-    ...
-
-
-@overload
-def get(locals: LocalsI18nDataType, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
-    ...
-
-
-def get(
-    locals: LocalsI18nDataType,
-    key: Optional[str] = None,
-    default: Optional[str] = None,
-    *,
-    lang: Optional[str] = None,
-    default_lang: Optional[str] = None,
-    **kwargs: Any,
-) -> Union[
-    Optional[str],
-    Dict[str, Union[str, List[Any]]],
-    Dict[str, Dict[str, Union[str, List[Any]]]],
-]:
-    def get_lang_str(lang: Optional[str]):
-        if lang and (local := locals.get(lang)):
-            keys = key.split(".")
-            value = local.get("messages")
-
-            for k in keys:
-                if isinstance(value, dict) and (value := value.get(k)):
-                    pass
-                else:
-                    value = key if default is None else default
-
-            return (value or value).format_map(kwargs)
-
-    # (locals, key) -> ...
-    if key:
-        if not (data := get_lang_str(lang)) and lang != default_lang:
-            return get_lang_str(default_lang)
-        return data
-
-    output = {}
-
-    def get_key(key: List[str], value: MessagesType):
-        if isinstance(value, (list, str)):
-            output[".".join(key)] = value
-            return
-
-        for k, data in value.items():
-            get_key([*key, k], data)
-
-    # (locals, local) -> ...
-    if lang:
-        get_key([], locals.get(lang))
-        return output
-
-    # (locals) -> ...
-    langs = {}
-
-    for local in locals.keys():
-        output = {}
-        get_key([], locals.get(local))
-        langs[local] = output
-
-    return langs
-
-
-async def command_before_invoke(ctx: Union[Context, ApplicationContext]):
-    bot: "Bot" = ctx.bot
-
-    command = ctx.command
-    command_file = Path(inspect.getfile(command.callback))
-    locals = load_i18n_file_from_file(command_file).get(command.name, {})
-
-    locale = (
-        ctx.locale
-        if isinstance(ctx, ApplicationContext)
-        else ctx.guild.preferred_locale
-    ) or bot.base_lang
-
-    ctx.__dict__["_"] = lambda *args, **kwargs: get(
-        locals,
-        *args,
-        lang=locale,
-        default_lang=kwargs.get("default_lang", bot.base_lang),
-        **kwargs,
-    )
-
-
-def load_i18n_file_from_file(path: Union[str, Path]) -> I18nFileDataType:
-    if not (path := Path(path)).is_file():
-        raise ValueError("path must be a file")
-
-    i18n_dir = path.parent / "i18n"
-    file_name = path.stem
-
-    # https://discord.com/developers/docs/reference#locales
-    if (
-        (i18n_file := Path(i18n_dir) / f"{file_name}.json").is_file()
-        or (i18n_file := Path(i18n_dir) / f"{file_name}.yml").is_file()
-        or (i18n_file := Path(i18n_dir) / f"{file_name}.yaml").is_file()
-    ):
-        file_extension = i18n_file.suffix[1:]
-        data = i18n_file.read_text(encoding="utf-8")
-
-        if file_extension == "json":
-            return json.loads(data)
-
-        return yaml.safe_load(data)
-
-    return {}
-
-
-def load_i18n_file(
-    i18n_dir: Union[str, Path],
-    file_name: str,
-) -> Optional[I18nFileDataType]:
-    return load_i18n_file_from_file(Path(i18n_dir) / file_name)
-
-
-def get_cog_i18n_file(cog: discord.Cog) -> Optional[I18nFileDataType]:
-    if isinstance(cog, discord.Cog):
-        return load_i18n_file_from_file(inspect.getfile(cog.__class__))
-
-
-def set_cog(cog: discord.Cog) -> None:
-    local = get_cog_i18n_file(cog)
-
-    for command in cog.__cog_commands__:
-        set_slash_command_local(command, local)
-
-
-def set_slash_command_local(
-    command: LocalCommandsType,
-    local_map: Optional[I18nFileDataType],
-) -> None:
-    if isinstance(command, (SlashCommand, SlashCommandGroup)) and local_map:
-        local_command = local_map.get(command.name)
-
-        if local_command is None:
-            return
-
-        local_name: Dict[str, str] = {}
-        local_description: Dict[str, str] = {}
-        local_args: CommandArgsI18nDataType = {}
-
-        for lang in local_command.keys():
-            lang_data = local_command[lang]
-
-            if name := lang_data.get("name"):
-                local_name[lang] = name
-            if description := lang_data.get("description"):
-                local_description[lang] = description
-
-            for arg_name, data in (lang_data.get("args") or {}).items():
-                set_dict_default(local_args, arg_name, {})
-                set_dict_default(local_args[arg_name], "name", {})
-                set_dict_default(local_args[arg_name], "description", {})
-
-                if not data:
+    def __call__(
+        self,
+        untranslated: str,
+        *,
+        local: str | None = None,
+        all: bool | None = None,
+        **kwargs: Any,
+    ) -> str:
+        local = local or get_default_locale()
+        if all:
+            translations = {local: untranslated}
+            for lang, translated in self.translations.items():
+                if untranslated not in translated:
                     continue
+                translations[lang] = translated.get(untranslated).format(**kwargs)
+            return translations
 
-                if name := data.get("name"):
-                    local_args[arg_name]["name"][lang] = name
-                if description := data.get("description"):
-                    local_args[arg_name]["description"][lang] = description
+        try:
+            return self.translations[local][untranslated]
+        except KeyError:
+            return untranslated.format(**kwargs)
 
-        set_dict_default(command, "name_localizations", {})
-        set_dict_default(command, "description_localizations", {})
+    def load_translations(self) -> None:
+        self.translations = _get_langs_translation(self.locales_path.parent)
 
-        command.name_localizations.update(local_name)
-        command.description_localizations.update(local_description)
 
-        args: List[discord.Option] = command._parse_options(
-            command._get_signature_parameters(),
-            check_params=True,
-            # pass ctx
-        )[1:]
-        for arg in args:
-            set_dict_default(arg, "name_localizations", {})
-            set_dict_default(arg, "description_localizations", {})
+def get_default_locale() -> str:
+    return _default_lang.get()
 
-            local_arg = local_args.get(arg._parameter_name, {})
-            arg.name_localizations.update(local_arg.get("name", {}))
-            arg.description_localizations.update(local_arg.get("description", {}))
+
+def set_default_locale(locale: str) -> None:
+    if locale not in valid_locales:
+        raise ValueError(
+            f"Locale {locale!r} is not a valid locale, see {docs}/reference#locales for"
+            " list of supported locales."
+        )
+
+    _default_lang.set(locale)
+
+
+def reload_locales() -> None:
+    for translator in _translators:
+        translator.load_locales()
+
+
+def _get_langs_translation(path: Path):
+    translations = {}
+    for path in path.iterdir():
+        if path.is_file() and path.suffix == ".po":
+            translations[path.name] = _parse(path.read_text(encoding="utf-8"))
+    return translations
+
+
+def _parse(file_content: str) -> dict[str, str]:
+    translations = {}
+    step, untranslated, translated = _po_parse_step.NULL, "", ""
+
+    for line in file_content.splitlines():
+        line = line.strip()
+
+        if line.startswith('msgid "'):
+            if step == _po_parse_step.MSGSTR and translated:
+                translations[_unescape(untranslated)] = _unescape(translated)
+            step = _po_parse_step.MSGID
+            untranslated = line[7:-1]
+        elif line.startswith('"') and line.endswith('"'):
+            if step == _po_parse_step.MSGID:
+                untranslated += line[1:-1]
+            elif step == _po_parse_step.MSGSTR:
+                translated += line[1:-1]
+        elif line.startswith('msgstr "'):
+            step = _po_parse_step.MSGSTR
+            translated = line[7:-1]
+
+        if step is _po_parse_step.MSGSTR and translated:
+            translations[_unescape(untranslated)] = _unescape(translated)
+
+        return translations
+
+
+def _unescape(string):
+    return (
+        string.replace(r"\\", "\\")
+        .replace(r"\t", "\t")
+        .replace(r"\r", "\r")
+        .replace(r"\n", "\n")
+        .replace(r"\"", '"')
+    )

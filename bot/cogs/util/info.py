@@ -1,16 +1,20 @@
 from datetime import datetime, timedelta
 
 import discord
-from discord import Embed
+from discord import ApplicationContext, Embed
 
-from bot import BaseCog, Bot, ApplicationContext
+from bot import BaseCog, Bot, Translator
+
+_ = Translator(__name__)
 
 
 class InfoCog(BaseCog):
-    @discord.slash_command(guild_only=True)
+    @discord.slash_command(
+        guild_only=True,
+        name_localizations=_("上線時間", all=True),
+        description_localizations=_("查看機器人上線時間", all=True),
+    )
     async def uptime(self, ctx: ApplicationContext):
-        _ = ctx._
-
         uptime: timedelta = datetime.now() - self.bot.uptime
 
         s = int(uptime.total_seconds())
@@ -19,9 +23,9 @@ class InfoCog(BaseCog):
         minutes, seconds = divmod(remainder, s_s)
 
         embed = Embed(
-            title=_("embed_title"),
+            title=_("機器人上線時間"),
             description=_(
-                "description_template",
+                "{days:02d}天 {hours:02d}小時 {minutes:02d}分鐘 {seconds:02d}秒",
                 days=days,
                 hours=hours,
                 minutes=minutes,

@@ -28,7 +28,9 @@ class POTFileManager:
         self.potfile: POFile | None = None
 
         self.out_dir = kwargs.pop("output_dir", "locales")
-        self.out_filename = kwargs.pop("filename", "zh_TW.po")
+
+        lang = kwargs.pop("lang", "zh-TW")
+        self.out_filename = kwargs.pop("filename", f"{lang}.po")
         self.relative_cwd = kwargs.pop("relative_cwd", False)
 
         self._potfiles: dict[Path, POFile] = {}
@@ -240,10 +242,12 @@ def show_version(ctx: click.Context, _: click.Parameter, value: Any):
     callback=show_version,
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
+@click.option("-l", "lang", help="output lang", default="zh-TW", type=str)
 def main(
     arg_include_paths: list[Path] = [],
     arg_excluded_glob: list[str] = [],
     recursive=True,
+    lang: str = "zh-TW",
 ) -> None:
     include_paths: list[Path] = []
 
@@ -257,7 +261,7 @@ def main(
         excluded_files = set(Path().glob(glob))
         include_paths = [f for f in include_paths if f not in excluded_files]
 
-    potfile_manager = POTFileManager()
+    potfile_manager = POTFileManager(lang=lang)
     for path in include_paths:
         potfile_manager.move_to_current_file(path)
         ContentExtractor.from_file(path, pot_file=potfile_manager)

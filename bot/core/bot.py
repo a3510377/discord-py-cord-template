@@ -5,15 +5,11 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 import discord
-from discord import Intents
+from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
 from bot import __version__
 from bot.utils import fix_doc
-from bot.core.i18n import (
-    command_before_invoke as i18n_before_invoke,
-    set_cog as i18n_set_cog,
-)
 
 log = logging.getLogger("bot")
 
@@ -39,7 +35,6 @@ class Bot(commands.Bot):
         )
 
         self.owner_ids = {int(id) for id in os.getenv("OWNER_IDS", "").split(",")}
-        self.before_invoke(i18n_before_invoke)
 
         self.load_extension("bot.core.events")
         self.load_extension("bot.core.commands")
@@ -69,12 +64,14 @@ class Bot(commands.Bot):
         return await self.fetch_channel(channel_id)
 
     def add_cog(self, cog: discord.Cog, *, override: bool = False) -> None:
-        if isinstance(cog, discord.Cog):
-            # https://discord.com/developers/docs/reference#locales
-            i18n_set_cog(cog)
+        # https://discord.com/developers/docs/reference#locales
         super().add_cog(cog, override=override)
 
         self.log.info(f"cog {cog.__cog_name__} 加載完成")
+
+    def add_application_command(self, command: ApplicationCommand) -> None:
+        command.name
+        super().add_application_command(command)
 
     def remove_cog(self, name: str) -> None:
         if cog := super().remove_cog(name):

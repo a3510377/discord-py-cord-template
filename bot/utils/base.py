@@ -1,27 +1,10 @@
-from typing import (
-    Any,
-    ClassVar,
-    TYPE_CHECKING,
-    Dict,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, ClassVar, Type, TypeVar
 
 import discord
-from discord import ApplicationContext as DiscordApplicationContext
-from discord.ext.commands import Context as DiscordContext
-
 
 __all__ = (
     "BaseCog",
     "Bot",
-    "I18nContext",
-    "ApplicationContext",
-    "Context",
 )
 
 if TYPE_CHECKING:
@@ -49,36 +32,3 @@ class BaseCog(discord.Cog, metaclass=BaseCogMeta):
     def __init__(self, bot: "Bot") -> None:
         self.bot = bot
         self.log = bot.log
-
-
-class I18nContext:
-    @overload
-    def _(self) -> Dict[str, Dict[str, Union[str, List[Any]]]]:
-        ...
-
-    @overload
-    def _(self, *, lang: str) -> Dict[str, Union[str, List[Any]]]:
-        ...
-
-    @overload
-    def _(
-        self,
-        key: str,
-        default: Optional[str] = None,
-        *,
-        default_lang: Optional[str] = None,
-        **kwargs: Any,
-    ) -> Optional[str]:
-        ...
-
-    # typeof: import bot.core.i18n from command_before_invoke
-    def _():
-        raise NotImplementedError
-
-
-class ApplicationContext(I18nContext, DiscordApplicationContext):
-    pass
-
-
-class Context(I18nContext, DiscordContext):
-    pass

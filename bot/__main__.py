@@ -1,9 +1,8 @@
-import os
-import click
 import logging
-
+import os
 from typing import List, Union
 
+import click
 import dotenv
 
 
@@ -38,8 +37,8 @@ def run(
     level: List[str],
     env_path: Union[str, bool],
 ):
-    from .core.logging import init_logging
     from .core.bot import Bot
+    from .core.logging import init_logging
 
     if env_path is not None:
         if isinstance(env_path, str):
@@ -62,7 +61,8 @@ def run(
 
     init_logging(level=level)
 
-    Bot(dev=dev).run(token)
+    Bot(dev=dev)
+    # .run(token)
 
 
 if __name__ == "__main__":

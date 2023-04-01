@@ -2,11 +2,11 @@ import inspect
 from typing import Dict
 
 import discord
-from discord import ui as Ui, ButtonStyle, Interaction, ExtensionAlreadyLoaded
+from discord import ApplicationContext, ButtonStyle, ExtensionAlreadyLoaded, Interaction
+from discord import ui as Ui
 from discord.ext import commands
 
-from bot import BaseCog, Bot, ApplicationContext
-
+from bot import BaseCog, Bot
 from bot.utils.util import get_absolute_name_from_path
 
 

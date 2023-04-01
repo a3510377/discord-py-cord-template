@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from .core.i18n import *
 from .utils.base import *
 
 __all__ = (

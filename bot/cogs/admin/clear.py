@@ -1,33 +1,42 @@
 import discord
-from discord import Embed, Option, Message, Member
+from discord import ApplicationContext, Embed, Member, Message, Option
 
-from bot import BaseCog, Bot, ApplicationContext
+from bot import BaseCog, Bot, Translator
+
+_ = Translator(__name__)
 
 
 class ClearCog(BaseCog):
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
-    async def delete(
-        self,
-        ctx: ApplicationContext,
-        message_id: Option(str, "輸入要刪除的訊息ID"),
-        reason: Option(str, "Reason", default=None),
-    ):
-        _ = ctx._
-        reason = reason or _("default_reason")
+    @discord.option(
+        "message_id",
+        int,
+        description_localizations=_("要刪除的訊息 ID", all=True),
+    )
+    @discord.option(
+        "reason",
+        str,
+        name_localizations=_("原因", all=True),
+        description_localizations=_("刪除訊息的原因", all=True),
+        default="",
+    )
+    async def delete(self, ctx: ApplicationContext, message_id: int, reason: str):
         message: Message = await ctx.fetch_message(int(message_id))
+        content = ctx.message.content.strip()
 
-        await message.delete(
-            reason=_(
-                "delete_reason_template",
-                ctx=ctx,
-                reason=reason,
-            )
+        reason = _(
+            "{author.name} 刪除了: {msg}\n原因{reason}",
+            author=ctx.author,
+            message=f"{content}..." if len(content) > 10 else content,
+            reason=reason,
         )
 
+        await message.delete(reason=_("delete_reason_template", ctx=ctx, reason=reason))
+
         embed = Embed(
-            title=_("done"),
-            description=_("embed_description", reason=reason),
+            title=_("刪除完畢"),
+            description=reason,
         )
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
         await ctx.respond(embed=embed, ephemeral=True)
@@ -43,7 +52,6 @@ class ClearCog(BaseCog):
         before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
         after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
     ):
-        _ = ctx._
         reason = reason or _("default_reason")
         if before and after:
             embed = Embed(
