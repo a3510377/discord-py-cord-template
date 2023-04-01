@@ -63,7 +63,7 @@ class CogConnectionView(Ui.View):
         errors = self.bot.load_extension("bot.cogs", recursive=True, store=True)
         embed = discord.Embed(
             title="加載完成",
-            description=f"共家載 {old_cog_count - len(self.bot.cogs)} 個擴展",
+            description=f"共加載 {old_cog_count - len(self.bot.cogs)} 個擴展",
         )
 
         for name, error in errors.items():
