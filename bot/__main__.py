@@ -61,8 +61,7 @@ def run(
 
     init_logging(level=level)
 
-    Bot(dev=dev)
-    # .run(token)
+    Bot(dev=dev).run(token)
 
 
 if __name__ == "__main__":

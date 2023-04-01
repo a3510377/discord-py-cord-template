@@ -7,6 +7,7 @@ from discord import ui as Ui
 from discord.ext import commands
 
 from bot import BaseCog, Bot
+from bot.core.i18n import reload_locales
 from bot.utils.util import get_absolute_name_from_path
 
 
@@ -83,6 +84,7 @@ class BaseCommandsCog(BaseCog):
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx: ApplicationContext):
+        reload_locales()
         await ctx.send(
             "請選取您要的模式",
             view=CogConnectionView(self.bot),

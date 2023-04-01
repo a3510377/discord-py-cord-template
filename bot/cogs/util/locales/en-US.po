@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2023-04-01 18:48+0800\n"
+"POT-Creation-Date: 2023-04-01 19:32+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: FULL NAME <EMAIL@ADDRESS>\n"
@@ -15,16 +15,16 @@ msgstr ""
 
 #: bot\cogs\util\info.py:14
 msgid "上線時間"
-msgstr ""
+msgstr "uptime"
 
 #: bot\cogs\util\info.py:15
 msgid "查看機器人上線時間"
-msgstr ""
+msgstr "Check bot online duration"
 
 #: bot\cogs\util\info.py:26
 msgid "機器人上線時間"
-msgstr ""
+msgstr "bot up time"
 
 #: bot\cogs\util\info.py:28
 msgid "{days:02d}天 {hours:02d}小時 {minutes:02d}分鐘 {seconds:02d}秒"
-msgstr ""
+msgstr "{days:02d}d {hours:02d}h {minutes:02d}m {seconds:02d}s"

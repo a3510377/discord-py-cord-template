@@ -16,7 +16,10 @@ class InfoCog(BaseCog):
     )
     async def uptime(self, ctx: ApplicationContext):
         uptime: timedelta = datetime.now() - self.bot.uptime
-
+        print(
+            _("查看機器人上線時間", all=True),
+            _("上線時間", all=True),
+        )
         s = int(uptime.total_seconds())
         days, remainder = divmod(s, (h_s := (s_s := 60) ** 2) * 24)
         hours, remainder = divmod(remainder, h_s)

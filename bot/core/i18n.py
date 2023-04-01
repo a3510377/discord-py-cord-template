@@ -1,4 +1,5 @@
 from enum import Enum, auto
+import logging
 from pathlib import Path
 import traceback
 from contextvars import ContextVar
@@ -6,8 +7,11 @@ from typing import Any
 
 from discord.commands.core import valid_locales, docs
 
+log = logging.getLogger(__name__)
+
 _translators: list["Translator"] = []
-_default_lang = ContextVar("_default_lang", default="zh-TW")
+_file_default_lang = "zh-TW"
+_default_lang = ContextVar("_default_lang", default=_file_default_lang)
 
 
 class _po_parse_step(Enum):
@@ -39,11 +43,12 @@ class Translator:
     ) -> str:
         local = local or get_default_locale()
         if all:
-            translations = {local: untranslated}
+            translations = {_file_default_lang: untranslated}
             for lang, translated in self.translations.items():
-                if untranslated not in translated:
-                    continue
-                translations[lang] = translated.get(untranslated).format(**kwargs)
+                translations[lang] = translated.get(
+                    untranslated,
+                    untranslated,
+                ).format(**kwargs)
             return translations
 
         try:
@@ -52,7 +57,7 @@ class Translator:
             return untranslated.format(**kwargs)
 
     def load_translations(self) -> None:
-        self.translations = _get_langs_translation(self.locales_path.parent)
+        self.translations = _get_langs_translation(self.locales_path)
 
 
 def get_default_locale() -> str:
@@ -71,14 +76,17 @@ def set_default_locale(locale: str) -> None:
 
 def reload_locales() -> None:
     for translator in _translators:
-        translator.load_locales()
+        translator.load_translations()
 
 
-def _get_langs_translation(path: Path):
-    translations = {}
+def _get_langs_translation(path: Path) -> dict[str, dict[str, str]]:
+    translations = dict.fromkeys(valid_locales, dict[str, str]())
     for path in path.iterdir():
-        if path.is_file() and path.suffix == ".po":
-            translations[path.name] = _parse(path.read_text(encoding="utf-8"))
+        file_lang = path.stem
+        if path.is_file() and path.suffix == ".po" and file_lang in valid_locales:
+            translations[file_lang] = _parse(path.read_text(encoding="utf-8"))
+        elif file_lang != "base":
+            log.warn(f"Unexpected filename, 'invalid' file: {path}")
     return translations
 
 

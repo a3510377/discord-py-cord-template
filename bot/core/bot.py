@@ -9,6 +9,7 @@ from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
 from bot import __version__
+from bot.core.i18n import set_default_locale
 from bot.utils import fix_doc
 
 log = logging.getLogger("bot")
@@ -21,7 +22,8 @@ class Bot(commands.Bot):
         self.dev = dev
         self.log = log
         self._uptime: Optional[datetime] = None
-        self.base_lang = os.getenv("BASE_LANG", "zh_TW")
+        self.base_lang = kwargs.pop("lang", os.getenv("BASE_LANG", "zh-TW"))
+        set_default_locale(self.base_lang)
 
         intents = Intents.default()
         intents.message_content = True
