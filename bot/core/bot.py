@@ -9,7 +9,7 @@ from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
 from bot import __version__
-from bot.core.i18n import set_default_locale
+from bot.core.i18n import command_before_invoke, set_default_locale
 from bot.utils import fix_doc
 
 log = logging.getLogger("bot")
@@ -38,6 +38,7 @@ class Bot(commands.Bot):
 
         self.owner_ids = {int(id) for id in os.getenv("OWNER_IDS", "").split(",")}
 
+        self.before_invoke(command_before_invoke)
         self.load_extension("bot.core.events")
         self.load_extension("bot.core.commands")
         self.load_extension("bot.cogs", recursive=True)

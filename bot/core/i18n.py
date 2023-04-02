@@ -1,15 +1,19 @@
-from enum import Enum, auto
 import logging
-from pathlib import Path
 import traceback
 from contextvars import ContextVar
-from typing import Any
+from enum import Enum, auto
+from pathlib import Path
+from typing import ClassVar, overload
 
-from discord.commands.core import valid_locales, docs
+from discord import ApplicationContext as DiscordApplicationContext
+from discord.commands.core import docs, valid_locales
+from discord.ext.commands import Context as DiscordContext
+
+from bot.utils.base import ApplicationContext, Context
 
 log = logging.getLogger(__name__)
 
-_translators: list["Translator"] = []
+_translators: dict[Path, "Translator"] = {}
 _file_default_lang = "zh-TW"
 _default_lang = ContextVar("_default_lang", default=_file_default_lang)
 
@@ -21,17 +25,36 @@ class _po_parse_step(Enum):
 
 
 class Translator:
-    def __init__(self, name: str, locales_path: str | None = None) -> None:
-        self.name = name
+    locales_path: ClassVar[Path]
+
+    def __new__(cls, *_, **kwargs):
+        locales_path = kwargs.pop("locales_path", None)
+
+        if locales_path in _translators:
+            return _translators.get(locales_path)
+
+        self = super().__new__(cls)
         self.locales_path = Path(
             locales_path
             if locales_path
             else Path(traceback.extract_stack()[-2].filename).parent / "locales"
         )
+        _translators[self.locales_path] = self
+        return self
+
+    # locales_path is type hint, accomplish in __new__
+    def __init__(self, name: str, locales_path: str | None = None) -> None:
+        self.name = name
 
         self.translations: dict[str, dict[str, str]] = {}  # dict[lang, dict[key, str]]
-        _translators.append(self)
         self.load_translations()
+
+    # fmt: off
+    @overload
+    def __call__(self, untranslated: str, *, local: str | None = None) -> str: ...  # noqa
+    @overload
+    def __call__(self, untranslated: str, *, local: str | None = None, all: bool = True) -> dict[str, str]: ...  # noqa
+    # fmt: on
 
     def __call__(
         self,
@@ -39,22 +62,20 @@ class Translator:
         *,
         local: str | None = None,
         all: bool | None = None,
-        **kwargs: Any,
-    ) -> str:
+    ) -> str | dict[str, str]:
         local = local or get_default_locale()
         if all:
             translations = {_file_default_lang: untranslated}
             for lang, translated in self.translations.items():
-                translations[lang] = translated.get(
-                    untranslated,
-                    untranslated,
-                ).format(**kwargs)
+                translations[lang] = (
+                    translated.get(untranslated, untranslated) or untranslated
+                )
             return translations
 
         try:
             return self.translations[local][untranslated]
         except KeyError:
-            return untranslated.format(**kwargs)
+            return untranslated
 
     def load_translations(self) -> None:
         self.translations = _get_langs_translation(self.locales_path)
@@ -109,12 +130,12 @@ def _parse(file_content: str) -> dict[str, str]:
                 translated += line[1:-1]
         elif line.startswith('msgstr "'):
             step = _po_parse_step.MSGSTR
-            translated = line[7:-1]
+            translated = line[8:-1]
 
         if step is _po_parse_step.MSGSTR and translated:
             translations[_unescape(untranslated)] = _unescape(translated)
 
-        return translations
+    return translations
 
 
 def _unescape(string):
@@ -125,3 +146,22 @@ def _unescape(string):
         .replace(r"\n", "\n")
         .replace(r"\"", '"')
     )
+
+
+async def command_before_invoke(
+    ctx: DiscordContext | DiscordApplicationContext,
+) -> Context | ApplicationContext:
+    local = (
+        ctx.locale
+        if isinstance(ctx, DiscordApplicationContext)
+        else ctx.guild.preferred_locale
+    )
+
+    def _base_translator(*args, **kwargs):
+        return Translator(
+            __name__,
+            locales_path=Path(traceback.extract_stack()[-2].filename).parent
+            / "locales",
+        )(*args, local=local, **kwargs)
+
+    ctx.__dict__["_"] = _base_translator

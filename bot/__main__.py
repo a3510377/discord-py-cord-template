@@ -1,9 +1,11 @@
 import logging
 import os
+from pathlib import Path
 from typing import List, Union
 
 import click
 import dotenv
+from discord.commands.core import valid_locales
 
 
 @click.command()
@@ -30,13 +32,46 @@ import dotenv
     default=True,
     help="load env file path or stop load env file",
 )
+@click.option(
+    "-s",
+    "--summon-i18n-file",
+    "summon_i18n",
+    is_flag=True,
+    help="summon i18n file",
+)
+@click.option("-l", "lang", help="summon_i18n output langs", default="zh-TW", type=str)
+@click.option(
+    "-f",
+    "arg_include_paths",
+    help="include paths",
+    multiple=True,
+    type=Path,
+)
+@click.option("-r", "recursive", help="use recursive", is_flag=True)
 def run(
     input_token: bool,
     dev: bool,
     token: str,
     level: List[str],
     env_path: Union[str, bool],
+    summon_i18n: bool,
+    lang: str,
+    arg_include_paths: Path,
+    recursive: bool,
 ):
+    if summon_i18n:
+        if lang == ".":
+            lang = ",".join(valid_locales)
+        else:
+            for _lang in lang.split(","):
+                if _lang not in valid_locales:
+                    click.echo(f"無效的語言標記 {_lang}")
+                    return
+        from tool.i18n import main
+
+        main(lang=lang, arg_include_paths=arg_include_paths, recursive=recursive)
+        return
+
     from .core.bot import Bot
     from .core.logging import init_logging
 

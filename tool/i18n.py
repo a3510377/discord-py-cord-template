@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import inspect
 import io
 import re
 import sys
@@ -13,6 +14,10 @@ import click
 from polib import POEntry, POFile
 
 KEYWORDS = ("_",)
+KEYWORDS_KEYWORDS = (
+    "local",
+    "all",
+)
 
 __version__ = "1.0.0"
 
@@ -20,7 +25,6 @@ __version__ = "1.0.0"
 class POTFileManager:
     def __init__(self, **kwargs: Any) -> None:
         """
-        `filename`
         `output_dir`
         `relative_cwd`
         """
@@ -29,8 +33,6 @@ class POTFileManager:
 
         self.out_dir = kwargs.pop("output_dir", "locales")
 
-        lang = kwargs.pop("lang", "zh-TW")
-        self.out_filename = kwargs.pop("filename", f"{lang}.po")
         self.relative_cwd = kwargs.pop("relative_cwd", False)
 
         self._potfiles: dict[Path, POFile] = {}
@@ -40,10 +42,10 @@ class POTFileManager:
 
         current_dir = Path() if self.relative_cwd else self.current_file.parent
 
-        self._out_file = current_dir / self.out_dir / self.out_filename
-        if self._out_file not in self._potfiles:
+        self._out_dir = current_dir / self.out_dir
+        if self._out_dir not in self._potfiles:
             self.potfile: POFile = POFile()
-            self._potfiles[self._out_file] = self.potfile
+            self._potfiles[self._out_dir] = self.potfile
             self.potfile.metadata = self.potfile_metadata()
 
     @staticmethod
@@ -70,11 +72,17 @@ class POTFileManager:
             **kwargs,
         )
 
-    def write(self) -> None:
+    def write(self, langs: list[str] = "zh-TW") -> None:
         for outfile_path, potfile in self._potfiles.items():
-            outfile_path.parent.mkdir(parents=True, exist_ok=True)
-            potfile.sort(key=lambda e: e.occurrences[0])
-            potfile.save(str(outfile_path))
+            for lang in langs:
+                current_file = outfile_path / f"{lang}.po"
+                current_file.parent.mkdir(parents=True, exist_ok=True)
+
+                potfile.metadata |= {"Language": lang}
+
+                potfile.sort(key=lambda e: e.occurrences[0])
+                potfile.save(str(current_file))
+                print(f"summon {current_file} done")
 
     def add_entry(
         self,
@@ -137,7 +145,13 @@ class ContentExtractor(ast.NodeVisitor):
     def error(self, starting_node: ast.AST, msg: str) -> None:
         print(
             f"{self.pot_file.current_file}:{starting_node.lineno}: {msg}\n"
-            + ast.get_source_segment(self.source, starting_node, padded=True),
+            + inspect.cleandoc(
+                ast.get_source_segment(
+                    self.source,
+                    starting_node,
+                    padded=True,
+                )
+            ),
             file=sys.stderr,
         )
 
@@ -158,7 +172,9 @@ class ContentExtractor(ast.NodeVisitor):
         else:
             return self.generic_visit(node)
 
-        if len(node.args) != 1:
+        if len(node.args) != 1 or len(
+            [x for x in node.keywords if x.arg not in KEYWORDS_KEYWORDS]
+        ):
             self.error(node, "發現錯誤的參數")
             return self.generic_visit(node)
 
@@ -243,6 +259,10 @@ def show_version(ctx: click.Context, _: click.Parameter, value: Any):
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
 @click.option("-l", "lang", help="output lang", default="zh-TW", type=str)
+def main_command(**kwargs):
+    return main(**kwargs)
+
+
 def main(
     arg_include_paths: list[Path] = [],
     arg_excluded_glob: list[str] = [],
@@ -261,13 +281,13 @@ def main(
         excluded_files = set(Path().glob(glob))
         include_paths = [f for f in include_paths if f not in excluded_files]
 
-    potfile_manager = POTFileManager(lang=lang)
+    potfile_manager = POTFileManager()
     for path in include_paths:
         potfile_manager.move_to_current_file(path)
         ContentExtractor.from_file(path, pot_file=potfile_manager)
 
-    potfile_manager.write()
+    potfile_manager.write(langs=lang.split(","))
 
 
 if __name__ == "__main__":
-    main()
+    main_command()

@@ -1,6 +1,9 @@
-from typing import TYPE_CHECKING, Any, ClassVar, Type, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Type, TypeVar, overload
 
 import discord
+
+from discord import ApplicationContext as DiscordApplicationContext
+from discord.ext.commands import Context as DiscordContext
 
 __all__ = (
     "BaseCog",
@@ -32,3 +35,38 @@ class BaseCog(discord.Cog, metaclass=BaseCogMeta):
     def __init__(self, bot: "Bot") -> None:
         self.bot = bot
         self.log = bot.log
+
+
+class I18nContext:
+    @overload
+    def _(
+        self,
+        untranslated: str,
+        *,
+        local: str | None = None,
+    ) -> str:
+        ...
+
+    @overload
+    def _(
+        self,
+        untranslated: str,
+        *,
+        local: str | None = None,
+        all: bool = True,
+    ) -> dict[str, str]:
+        ...
+
+    # typeof: import bot.core.i18n from command_before_invoke
+    def _() -> ...:
+        raise NotImplementedError
+
+
+# typeof: import bot.core.i18n from command_before_invoke
+class ApplicationContext(I18nContext, DiscordApplicationContext):
+    pass
+
+
+# typeof: import bot.core.i18n from command_before_invoke
+class Context(I18nContext, DiscordContext):
+    pass

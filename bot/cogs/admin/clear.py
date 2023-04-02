@@ -25,14 +25,18 @@ class ClearCog(BaseCog):
         message: Message = await ctx.fetch_message(int(message_id))
         content = ctx.message.content.strip()
 
-        reason = _(
-            "{author.name} 刪除了: {msg}\n原因{reason}",
+        reason = _("{author.name} 刪除了: {msg}\n原因{reason}").format(
             author=ctx.author,
             message=f"{content}..." if len(content) > 10 else content,
             reason=reason,
         )
 
-        await message.delete(reason=_("delete_reason_template", ctx=ctx, reason=reason))
+        await message.delete(
+            reason=_("delete_reason_template").format(
+                ctx=ctx,
+                reason=reason,
+            )
+        )
 
         embed = Embed(
             title=_("刪除完畢"),
@@ -71,15 +75,14 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
-            reason=_(
-                "delete_reason_template",
+            reason=_("delete_reason_template").format(
                 ctx=ctx,
                 reason=reason,
             ),
         )
         embed = Embed(
-            title=_("done", del_message=len(del_message)),
-            description=_("embed_description", reason=reason),
+            title=_("done").format(del_message=len(del_message)),
+            description=_("embed_description").format(reason=reason),
         )
         await ctx.respond(embed=embed, ephemeral=True)
 
