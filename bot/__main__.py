@@ -48,6 +48,7 @@ from discord.commands.core import valid_locales
     type=Path,
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
+@click.option("-o", "overwrite", help="overwrite old po file", is_flag=True)
 def run(
     input_token: bool,
     dev: bool,
@@ -58,6 +59,7 @@ def run(
     lang: str,
     arg_include_paths: Path,
     recursive: bool,
+    overwrite: bool,
 ):
     if summon_i18n:
         if lang == ".":
@@ -69,7 +71,12 @@ def run(
                     return
         from tool.i18n import main
 
-        main(lang=lang, arg_include_paths=arg_include_paths, recursive=recursive)
+        main(
+            lang=lang,
+            arg_include_paths=arg_include_paths,
+            recursive=recursive,
+            overwrite=overwrite,
+        )
         return
 
     from .core.bot import Bot

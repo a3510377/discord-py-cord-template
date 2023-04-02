@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import click
-from polib import POEntry, POFile
+from polib import POEntry, POFile, pofile
 
 KEYWORDS = ("_",)
 KEYWORDS_KEYWORDS = (
@@ -72,7 +72,7 @@ class POTFileManager:
             **kwargs,
         )
 
-    def write(self, langs: list[str] = "zh-TW") -> None:
+    def write(self, langs: list[str] = "zh-TW", overwrite: bool = False) -> None:
         for outfile_path, potfile in self._potfiles.items():
             for lang in langs:
                 current_file = outfile_path / f"{lang}.po"
@@ -80,8 +80,23 @@ class POTFileManager:
 
                 potfile.metadata |= {"Language": lang}
 
-                potfile.sort(key=lambda e: e.occurrences[0])
-                potfile.save(str(current_file))
+                old_potfile = current_file
+                if not overwrite and current_file.is_file():
+                    old_potfile = pofile(current_file)
+                    old_potfile.merge(potfile)
+
+                def sort(e: POEntry):
+                    try:
+                        path, line = e.occurrences[0]
+                    except IndexError:
+                        return ()
+
+                    # int is needed, sometimes he returns str type and throws an error
+                    return (path, int(line))
+
+                old_potfile.sort(key=sort)
+                old_potfile.save(str(current_file))
+
                 print(f"summon {current_file} done")
 
     def add_entry(
@@ -188,7 +203,7 @@ class ContentExtractor(ast.NodeVisitor):
                 tmp_line = lineno
             self.add_entry(string_node, comments=comments, starting_node=node)
         else:
-            self.error(node, "輸入了錯物的參數")
+            self.error(node, "輸入了錯誤的參數")
 
         self.generic_visit(node)
 
@@ -259,6 +274,7 @@ def show_version(ctx: click.Context, _: click.Parameter, value: Any):
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
 @click.option("-l", "lang", help="output lang", default="zh-TW", type=str)
+@click.option("-o", "overwrite", help="overwrite old po file", is_flag=True)
 def main_command(**kwargs):
     return main(**kwargs)
 
@@ -268,6 +284,7 @@ def main(
     arg_excluded_glob: list[str] = [],
     recursive=True,
     lang: str = "zh-TW",
+    overwrite: bool = False,
 ) -> None:
     include_paths: list[Path] = []
 
@@ -286,7 +303,7 @@ def main(
         potfile_manager.move_to_current_file(path)
         ContentExtractor.from_file(path, pot_file=potfile_manager)
 
-    potfile_manager.write(langs=lang.split(","))
+    potfile_manager.write(langs=lang.split(","), overwrite=overwrite)
 
 
 if __name__ == "__main__":

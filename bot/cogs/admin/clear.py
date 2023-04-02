@@ -1,7 +1,7 @@
 import discord
-from discord import ApplicationContext, Embed, Member, Message, Option
+from discord import Embed, Member, Message
 
-from bot import BaseCog, Bot, Translator
+from bot import ApplicationContext, BaseCog, Bot, Translator
 
 _ = Translator(__name__)
 
@@ -25,21 +25,16 @@ class ClearCog(BaseCog):
         message: Message = await ctx.fetch_message(int(message_id))
         content = ctx.message.content.strip()
 
-        reason = _("{author.name} 刪除了: {msg}\n原因{reason}").format(
+        reason = ctx._("由 {ctx.author} 清除 - {reason}").format(
             author=ctx.author,
             message=f"{content}..." if len(content) > 10 else content,
-            reason=reason,
+            reason=reason or ctx._("無"),
         )
 
-        await message.delete(
-            reason=_("delete_reason_template").format(
-                ctx=ctx,
-                reason=reason,
-            )
-        )
+        await message.delete(reason=reason)
 
         embed = Embed(
-            title=_("刪除完畢"),
+            title=ctx._("刪除完畢"),
             description=reason,
         )
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
@@ -47,20 +42,46 @@ class ClearCog(BaseCog):
 
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
+    @discord.option("reason", str, description_localizations="Reason", default=None)
+    @discord.option(
+        "member",
+        Member,
+        description_localizations="要刪除的成員訊息",
+        default=None,
+    )
+    @discord.option(
+        "count",
+        int,
+        description_localizations="輸入要刪除的訊息數量",
+        min_value=1,
+        max_value=512,
+    )
+    @discord.option(
+        "before",
+        str,
+        description_localizations="刪除這則訊息以前的訊息(請輸入訊息ID)",
+        default=None,
+    )
+    @discord.option(
+        "after",
+        str,
+        description_localizations="刪除以這則訊息以後的訊息(請輸入訊息ID)",
+        default=None,
+    )
     async def purge(
         self,
         ctx: ApplicationContext,
-        count: Option(int, "輸入要刪除的訊息數量", min_value=1, max_value=512),
-        reason: Option(str, "Reason", default=None),
-        member: Option(Member, "要刪除的成員訊息", default=None),
-        before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
-        after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
+        count: int,
+        reason: str | None,
+        member: Member | None,
+        before: str | None,
+        after: str | None,
     ):
-        reason = reason or _("default_reason")
+        reason = reason or ctx._("無原因")
         if before and after:
             embed = Embed(
-                title=_("error"),
-                description=_("before_after_error"),
+                title=ctx._("錯誤!"),
+                description=ctx._("`before` 和 `after` 選項不得同時出現"),
                 color=0xE74C3C,
             )
             await ctx.respond(embed=embed, ephemeral=True)
@@ -75,14 +96,14 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
-            reason=_("delete_reason_template").format(
+            reason=ctx._("由 {ctx.author} 清除 - {reason}").format(
                 ctx=ctx,
                 reason=reason,
             ),
         )
         embed = Embed(
-            title=_("done").format(del_message=len(del_message)),
-            description=_("embed_description").format(reason=reason),
+            title=ctx._("訊息刪除成功!").format(del_message=len(del_message)),
+            description=ctx._("原因: {reason}").format(reason=reason),
         )
         await ctx.respond(embed=embed, ephemeral=True)
 

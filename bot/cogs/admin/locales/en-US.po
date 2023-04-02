@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2023-04-02 18:22+0800\n"
+"POT-Creation-Date: 2023-04-02 22:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: FULL NAME <EMAIL@ADDRESS>\n"
@@ -25,36 +25,34 @@ msgstr ""
 msgid "刪除訊息的原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:28
-msgid ""
-"{author.name} 刪除了: {msg}\n"
-"原因{reason}"
+#: bot\cogs\admin\clear.py:28 bot\cogs\admin\clear.py:99
+msgid "由 {ctx.author} 清除 - {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:35 bot\cogs\admin\clear.py:78
-msgid "delete_reason_template"
+#: bot\cogs\admin\clear.py:31
+msgid "無"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:42
+#: bot\cogs\admin\clear.py:37
 msgid "刪除完畢"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:59
-msgid "default_reason"
+#: bot\cogs\admin\clear.py:80
+msgid "無原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:62
-msgid "error"
-msgstr ""
-
-#: bot\cogs\admin\clear.py:63
-msgid "before_after_error"
+#: bot\cogs\admin\clear.py:83
+msgid "錯誤!"
 msgstr ""
 
 #: bot\cogs\admin\clear.py:84
-msgid "done"
+msgid "`before` 和 `after` 選項不得同時出現"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:85
-msgid "embed_description"
+#: bot\cogs\admin\clear.py:105
+msgid "訊息刪除成功!"
+msgstr ""
+
+#: bot\cogs\admin\clear.py:106
+msgid "原因: {reason}"
 msgstr ""
