@@ -29,16 +29,12 @@ msgstr ""
 msgid "由 {ctx.author} 清除 - {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:31
-msgid "無"
+#: bot\cogs\admin\clear.py:31 bot\cogs\admin\clear.py:80
+msgid "無原因"
 msgstr ""
 
 #: bot\cogs\admin\clear.py:37
 msgid "刪除完畢"
-msgstr ""
-
-#: bot\cogs\admin\clear.py:80
-msgid "無原因"
 msgstr ""
 
 #: bot\cogs\admin\clear.py:83
@@ -49,10 +45,10 @@ msgstr ""
 msgid "`before` 和 `after` 選項不得同時出現"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:105
-msgid "訊息刪除成功!"
+#: bot\cogs\admin\clear.py:101 bot\cogs\admin\clear.py:106
+msgid "原因: {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:106
-msgid "原因: {reason}"
+#: bot\cogs\admin\clear.py:105
+msgid "訊息刪除成功!"
 msgstr ""

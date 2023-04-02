@@ -17,6 +17,7 @@ KEYWORDS = ("_",)
 KEYWORDS_KEYWORDS = (
     "local",
     "all",
+    "guild_local",
 )
 
 __version__ = "1.0.0"

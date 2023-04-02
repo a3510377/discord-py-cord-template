@@ -151,13 +151,19 @@ def _unescape(string):
 async def command_before_invoke(
     ctx: DiscordContext | DiscordApplicationContext,
 ) -> Context | ApplicationContext:
-    local = (
-        ctx.locale
-        if isinstance(ctx, DiscordApplicationContext)
-        else ctx.guild.preferred_locale
-    )
-
     def _base_translator(*args, **kwargs):
+        if kwargs.pop("guild_local"):
+            if isinstance(ctx, DiscordApplicationContext):
+                local = ctx.guild_locale
+            else:
+                local = ctx.guild.preferred_locale
+        else:
+            local = (
+                ctx.locale
+                if isinstance(ctx, DiscordApplicationContext)
+                else ctx.guild.preferred_locale
+            )
+
         return Translator(
             __name__,
             locales_path=Path(traceback.extract_stack()[-2].filename).parent

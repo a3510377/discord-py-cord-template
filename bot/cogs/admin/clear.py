@@ -28,7 +28,7 @@ class ClearCog(BaseCog):
         reason = ctx._("由 {ctx.author} 清除 - {reason}").format(
             author=ctx.author,
             message=f"{content}..." if len(content) > 10 else content,
-            reason=reason or ctx._("無"),
+            reason=reason or ctx._("無原因"),
         )
 
         await message.delete(reason=reason)
@@ -96,9 +96,9 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
-            reason=ctx._("由 {ctx.author} 清除 - {reason}").format(
+            reason=ctx._("由 {ctx.author} 清除 - {reason}", guild_local=True).format(
                 ctx=ctx,
-                reason=reason,
+                reason=ctx._("原因: {reason}", guild_local=True),
             ),
         )
         embed = Embed(

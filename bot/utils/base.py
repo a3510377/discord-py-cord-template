@@ -44,6 +44,7 @@ class I18nContext:
         untranslated: str,
         *,
         local: str | None = None,
+        guild_local: bool = False,
     ) -> str:
         ...
 
@@ -53,6 +54,7 @@ class I18nContext:
         untranslated: str,
         *,
         local: str | None = None,
+        guild_local: bool = False,
         all: bool = True,
     ) -> dict[str, str]:
         ...

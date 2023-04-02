@@ -47,7 +47,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 - Cog 架構
 - For (初學者/開發者)
 - Bot 指令/類別/功能 分離
-- I18n 多語言支持
+- I18n 多語言支持 (使用 `gettext` 製作實現)
 - Logging 日誌系統
 
 ## 🚀 食用方法
@@ -89,14 +89,8 @@ Python Discord Bot(Pycord版) 基礎骨架
 
     ```sh
     pip install -r requirements/dev.txt
+    pip install -r tool/requirements.txt
     ```
-
-- **`pipenv`**: 使用外部函式庫 [pipenv](https://pypi.org/project/pipenv/)
-
-  ```sh
-  pip install pipenv # 安裝 pipenv
-  pipenv install
-  ```
 
 ### 🔧 配置
 
@@ -126,9 +120,8 @@ python start.py
 ├ 📂 bot                   # 原代碼資料夾
 │ ├ 📂 cogs                  # cog 資料夾
 │ │ ├ 📂 admin                 # 管理類 cog 存放
-│ │ │ ├ 📂 i18n                  # 多語言資料
-│ │ │ │ ├ clear.yaml            # 給予上層 clear.py 的多語言檔案
-│ │ │ │ └ [filename].yaml       # [上層 cog 存放處檔案名].{yaml,yml,json}
+│ │ │ ├ 📂 locales              # 多語言資料
+│ │ │ │ └ [en-US].po            # *.po 為上層目錄中所有 .py 檔案的翻譯文件
 │ │ │ ├ clear.py              # 清除訊息指令程式
 │ │ │ └ [filename].py         # 其它的 cog 檔案 （請遵循 ./clear.py 的檔案架構）
 │ │ └ 📂 [cog dir]             # 其它的 cog 資料夾 （請遵循 ./admin 的資料夾結構）
@@ -152,6 +145,9 @@ python start.py
 ├ 📂 requirements          # 日誌存放
 │ ├ prod.txt              # 生產用函式庫使用
 │ └ dev.txt               # 開發用函式庫使用
+├ 📂 tool                 # 開發工具
+│ ├ i18n.py               # 製作 `.po` 檔案 (進行翻譯)
+│ └ requirements.txt      # tool 中所需要的函數庫
 ├ .dockerignore         # docker 忽略設定檔
 ├ .editorconfig         # editorconfig 設定檔
 ├ .env                  # 機密文件
@@ -162,8 +158,6 @@ python start.py
 ├ .prettierrc.yaml      # prettier 設定檔
 ├ Dockerfile            # Docker 編譯設定
 ├ LICENSE               # MIT License 希望您可以保留該文件讓大家可以更了解這個模板
-├ Pipfile               # pipenv 設定檔
-├ Pipfile.lock          # pipenv 緩存檔
 └ README.md             # 本文件
 ```
 
