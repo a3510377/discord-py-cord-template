@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import inspect
 import io
 import re
 import sys
@@ -10,9 +11,19 @@ from pathlib import Path
 from typing import Any
 
 import click
-from polib import POEntry, POFile
+from polib import POEntry, POFile, pofile
 
 KEYWORDS = ("_",)
+KEYWORDS_KEYWORDS = (
+    "local",
+    "all",
+    "guild_local",
+)
+DECORATOR_NAMES = ("cog_i18n",)
+DECORATOR_NAMES_CLASS_KWARGS = (
+    "name",
+    "description",
+)
 
 __version__ = "1.0.0"
 
@@ -20,7 +31,6 @@ __version__ = "1.0.0"
 class POTFileManager:
     def __init__(self, **kwargs: Any) -> None:
         """
-        `filename`
         `output_dir`
         `relative_cwd`
         """
@@ -28,7 +38,7 @@ class POTFileManager:
         self.potfile: POFile | None = None
 
         self.out_dir = kwargs.pop("output_dir", "locales")
-        self.out_filename = kwargs.pop("filename", "zh_TW.po")
+
         self.relative_cwd = kwargs.pop("relative_cwd", False)
 
         self._potfiles: dict[Path, POFile] = {}
@@ -38,10 +48,10 @@ class POTFileManager:
 
         current_dir = Path() if self.relative_cwd else self.current_file.parent
 
-        self._out_file = current_dir / self.out_dir / self.out_filename
-        if self._out_file not in self._potfiles:
+        self._out_dir = current_dir / self.out_dir
+        if self._out_dir not in self._potfiles:
             self.potfile: POFile = POFile()
-            self._potfiles[self._out_file] = self.potfile
+            self._potfiles[self._out_dir] = self.potfile
             self.potfile.metadata = self.potfile_metadata()
 
     @staticmethod
@@ -68,11 +78,32 @@ class POTFileManager:
             **kwargs,
         )
 
-    def write(self) -> None:
+    def write(self, langs: list[str] = "zh-TW", overwrite: bool = False) -> None:
         for outfile_path, potfile in self._potfiles.items():
-            outfile_path.parent.mkdir(parents=True, exist_ok=True)
-            potfile.sort(key=lambda e: e.occurrences[0])
-            potfile.save(str(outfile_path))
+            for lang in langs:
+                current_file = outfile_path / f"{lang}.po"
+                current_file.parent.mkdir(parents=True, exist_ok=True)
+
+                potfile.metadata |= {"Language": lang}
+
+                old_potfile = current_file
+                if not overwrite and current_file.is_file():
+                    old_potfile = pofile(current_file)
+                    old_potfile.merge(potfile)
+
+                def sort(e: POEntry):
+                    try:
+                        path, line = e.occurrences[0]
+                    except IndexError:
+                        return ()
+
+                    # int is needed, sometimes he returns str type and throws an error
+                    return (path, int(line))
+
+                old_potfile.sort(key=sort)
+                old_potfile.save(str(current_file))
+
+                print(f"summon {current_file} done")
 
     def add_entry(
         self,
@@ -135,7 +166,13 @@ class ContentExtractor(ast.NodeVisitor):
     def error(self, starting_node: ast.AST, msg: str) -> None:
         print(
             f"{self.pot_file.current_file}:{starting_node.lineno}: {msg}\n"
-            + ast.get_source_segment(self.source, starting_node, padded=True),
+            + inspect.cleandoc(
+                ast.get_source_segment(
+                    self.source,
+                    starting_node,
+                    padded=True,
+                )
+            ),
             file=sys.stderr,
         )
 
@@ -145,6 +182,34 @@ class ContentExtractor(ast.NodeVisitor):
             if isinstance(node, ast.Constant) and isinstance(node.value, str)
             else None
         )
+
+    def get_node_class_locals(self, node: ast.ClassDef) -> list[ast.Constant]:
+        for deco in node.decorator_list:
+            if isinstance(deco, ast.Call):  # @class_def()
+                if deco.func.id in DECORATOR_NAMES:
+                    break
+            elif isinstance(deco, ast.Name):  # @class_def
+                if deco.id in DECORATOR_NAMES:
+                    break
+        else:
+            self.generic_visit(node)
+            return []
+
+        result = []
+        for k in node.keywords:
+            if k.arg in DECORATOR_NAMES_CLASS_KWARGS:
+                result.append(k.value)
+
+        if isinstance(body := node.body[0], ast.Expr):
+            result.append(self.get_literal_string(body.value))
+
+        return [d for d in result if d]
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        # self.add_entry(node, comments=comments, starting_node=node)
+        for docs in self.get_node_class_locals(node):
+            self.add_entry(docs)
+        self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call) -> None:
         if isinstance(node.func, ast.Name):
@@ -156,7 +221,9 @@ class ContentExtractor(ast.NodeVisitor):
         else:
             return self.generic_visit(node)
 
-        if len(node.args) != 1:
+        if len(node.args) != 1 or len(
+            [x for x in node.keywords if x.arg not in KEYWORDS_KEYWORDS]
+        ):
             self.error(node, "發現錯誤的參數")
             return self.generic_visit(node)
 
@@ -170,7 +237,7 @@ class ContentExtractor(ast.NodeVisitor):
                 tmp_line = lineno
             self.add_entry(string_node, comments=comments, starting_node=node)
         else:
-            self.error(node, "輸入了錯物的參數")
+            self.error(node, "輸入了錯誤的參數")
 
         self.generic_visit(node)
 
@@ -182,7 +249,7 @@ class ContentExtractor(ast.NodeVisitor):
         is_docstring: bool = False,
     ) -> None:
         self.pot_file.add_entry(
-            node.value,
+            inspect.cleandoc(node.value),
             comments=comments,
             lineno=(starting_node or node).lineno,
             is_docstring=is_docstring,
@@ -199,7 +266,7 @@ class ContentExtractor(ast.NodeVisitor):
         comments = []
 
         line_number -= 1
-        while comment := self.file_comments.get(line_number, None):
+        while comment := self.file_comments.get(line_number):
             comments.append(comment)
             line_number -= 1
 
@@ -240,10 +307,18 @@ def show_version(ctx: click.Context, _: click.Parameter, value: Any):
     callback=show_version,
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
+@click.option("-l", "lang", help="output lang", default="zh-TW", type=str)
+@click.option("-o", "overwrite", help="overwrite old po file", is_flag=True)
+def main_command(**kwargs):
+    return main(**kwargs)
+
+
 def main(
     arg_include_paths: list[Path] = [],
     arg_excluded_glob: list[str] = [],
     recursive=True,
+    lang: str = "zh-TW",
+    overwrite: bool = False,
 ) -> None:
     include_paths: list[Path] = []
 
@@ -262,8 +337,8 @@ def main(
         potfile_manager.move_to_current_file(path)
         ContentExtractor.from_file(path, pot_file=potfile_manager)
 
-    potfile_manager.write()
+    potfile_manager.write(langs=lang.split(","), overwrite=overwrite)
 
 
 if __name__ == "__main__":
-    main()
+    main_command()

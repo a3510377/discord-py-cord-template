@@ -1,54 +1,93 @@
 import discord
-from discord import Embed, Option, Message, Member
+from discord import Embed, Member, Message
 
-from bot import BaseCog, Bot, ApplicationContext
+from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
+
+_ = Translator(__name__)
 
 
+@cog_i18n
 class ClearCog(BaseCog):
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
-    async def delete(
-        self,
-        ctx: ApplicationContext,
-        message_id: Option(str, "輸入要刪除的訊息ID"),
-        reason: Option(str, "Reason", default=None),
-    ):
-        _ = ctx._
-        reason = reason or _("default_reason")
+    @discord.option(
+        "message_id",
+        int,
+        description_localizations=_("要刪除的訊息 ID", all=True),
+    )
+    @discord.option(
+        "reason",
+        str,
+        name_localizations=_("原因", all=True),
+        description_localizations=_("刪除訊息的原因", all=True),
+        default="",
+    )
+    async def delete(self, ctx: ApplicationContext, message_id: int, reason: str):
         message: Message = await ctx.fetch_message(int(message_id))
+        content = ctx.message.content.strip()
 
-        await message.delete(
-            reason=_(
-                "delete_reason_template",
-                ctx=ctx,
-                reason=reason,
-            )
+        reason = ctx._("由 {ctx.author} 清除 - {reason}").format(
+            author=ctx.author,
+            message=f"{content}..." if len(content) > 10 else content,
+            reason=reason or ctx._("無原因"),
         )
 
+        await message.delete(reason=reason)
+
         embed = Embed(
-            title=_("done"),
-            description=_("embed_description", reason=reason),
+            title=ctx._("刪除完畢"),
+            description=reason,
         )
         embed.set_author(name=message.author, icon_url=message.author.avatar.url)
         await ctx.respond(embed=embed, ephemeral=True)
 
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
+    @discord.option(
+        "reason",
+        str,
+        description_localizations=_("原因", all=True),
+        default=None,
+    )
+    @discord.option(
+        "member",
+        Member,
+        description_localizations=_("要刪除的成員訊息", all=True),
+        default=None,
+    )
+    @discord.option(
+        "count",
+        int,
+        description_localizations=_("輸入要刪除的訊息數量", all=True),
+        min_value=1,
+        max_value=512,
+    )
+    @discord.option(
+        "before",
+        str,
+        description_localizations=_("刪除這則訊息以前的訊息(請輸入訊息ID)", all=True),
+        default=None,
+    )
+    @discord.option(
+        "after",
+        str,
+        description_localizations=_("刪除以這則訊息以後的訊息(請輸入訊息ID)", all=True),
+        default=None,
+    )
     async def purge(
         self,
         ctx: ApplicationContext,
-        count: Option(int, "輸入要刪除的訊息數量", min_value=1, max_value=512),
-        reason: Option(str, "Reason", default=None),
-        member: Option(Member, "要刪除的成員訊息", default=None),
-        before: Option(str, "刪除這則訊息以前的訊息(請輸入訊息ID)", default=None),
-        after: Option(str, "刪除以這則訊息以後的訊息(請輸入訊息ID)", default=None),
+        count: int,
+        reason: str | None,
+        member: Member | None,
+        before: str | None,
+        after: str | None,
     ):
-        _ = ctx._
-        reason = reason or _("default_reason")
+        reason = reason or ctx._("無原因")
         if before and after:
             embed = Embed(
-                title=_("error"),
-                description=_("before_after_error"),
+                title=ctx._("錯誤!"),
+                description=ctx._("`before` 和 `after` 選項不得同時出現"),
                 color=0xE74C3C,
             )
             await ctx.respond(embed=embed, ephemeral=True)
@@ -63,15 +102,14 @@ class ClearCog(BaseCog):
             check=lambda msg: msg.author == member or not member,
             before=before,
             after=after,
-            reason=_(
-                "delete_reason_template",
+            reason=ctx._("由 {ctx.author} 清除 - {reason}", guild_local=True).format(
                 ctx=ctx,
-                reason=reason,
+                reason=ctx._("原因: {reason}", guild_local=True),
             ),
         )
         embed = Embed(
-            title=_("done", del_message=len(del_message)),
-            description=_("embed_description", reason=reason),
+            title=ctx._("訊息刪除成功!").format(del_message=len(del_message)),
+            description=ctx._("原因: {reason}").format(reason=reason),
         )
         await ctx.respond(embed=embed, ephemeral=True)
 
