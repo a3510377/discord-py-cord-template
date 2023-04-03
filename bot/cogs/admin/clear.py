@@ -42,30 +42,35 @@ class ClearCog(BaseCog):
 
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)
-    @discord.option("reason", str, description_localizations="Reason", default=None)
+    @discord.option(
+        "reason",
+        str,
+        description_localizations=_("原因", all=True),
+        default=None,
+    )
     @discord.option(
         "member",
         Member,
-        description_localizations="要刪除的成員訊息",
+        description_localizations=_("要刪除的成員訊息", all=True),
         default=None,
     )
     @discord.option(
         "count",
         int,
-        description_localizations="輸入要刪除的訊息數量",
+        description_localizations=_("輸入要刪除的訊息數量", all=True),
         min_value=1,
         max_value=512,
     )
     @discord.option(
         "before",
         str,
-        description_localizations="刪除這則訊息以前的訊息(請輸入訊息ID)",
+        description_localizations=_("刪除這則訊息以前的訊息(請輸入訊息ID)", all=True),
         default=None,
     )
     @discord.option(
         "after",
         str,
-        description_localizations="刪除以這則訊息以後的訊息(請輸入訊息ID)",
+        description_localizations=_("刪除以這則訊息以後的訊息(請輸入訊息ID)", all=True),
         default=None,
     )
     async def purge(

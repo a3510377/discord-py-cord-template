@@ -45,8 +45,7 @@ class BaseEventsCog(BaseCog):
         ctx: ApplicationContext,
         error: DiscordException,
     ):
-        print(f"{type(error)}: {error}")
-        print(error.__class__.__name__)
+        self.log.error(error, stack_info=True)
 
 
 def setup(bot: "Bot"):
