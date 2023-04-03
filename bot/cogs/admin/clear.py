@@ -6,7 +6,7 @@ from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
 _ = Translator(__name__)
 
 
-@cog_i18n(_)
+@cog_i18n
 class ClearCog(BaseCog):
     @discord.slash_command(guild_only=True)
     @discord.default_permissions(manage_messages=True)

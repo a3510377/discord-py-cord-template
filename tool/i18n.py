@@ -183,14 +183,17 @@ class ContentExtractor(ast.NodeVisitor):
             else None
         )
 
-    def get_node_class_locals(self, node: ast.ClassDef) -> list[ast.Constant] | None:
+    def get_node_class_locals(self, node: ast.ClassDef) -> list[ast.Constant]:
         for deco in node.decorator_list:
-            if isinstance((func := deco.func), (ast.Name, ast.Attribute)):
-                if getattr(func, "id", getattr(func, "attr", None)) in DECORATOR_NAMES:
+            if isinstance(deco, ast.Call):  # @class_def()
+                if deco.func.id in DECORATOR_NAMES:
+                    break
+            elif isinstance(deco, ast.Name):  # @class_def
+                if deco.id in DECORATOR_NAMES:
                     break
         else:
             self.generic_visit(node)
-            return None
+            return []
 
         result = []
         for k in node.keywords:

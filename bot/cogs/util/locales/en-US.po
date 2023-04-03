@@ -13,10 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\cogs\util\info.py:12
-msgid "test_name"
-msgstr ""
-
 #: bot\cogs\util\info.py:15
 msgid "上線時間"
 msgstr "uptime"

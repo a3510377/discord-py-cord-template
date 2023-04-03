@@ -181,6 +181,12 @@ async def command_before_invoke(
 
 
 def cog_i18n(cls: type | Translator | None = None):
+    """
+    @cog_i18n(_)
+    @cog_i18n()
+    @cog_i18n
+    """
+
     def decorator(cog_class: type[_CogT]) -> type[_CogT]:
         if hasattr(cog_class, "__translator__"):
             return cog_class

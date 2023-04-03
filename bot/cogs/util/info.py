@@ -8,8 +8,8 @@ from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
 _ = Translator(__name__)
 
 
-@cog_i18n(_)
-class InfoCog(BaseCog, name="test_name"):
+@cog_i18n
+class InfoCog(BaseCog):
     @discord.slash_command(
         guild_only=True,
         name_localizations=_("上線時間", all=True),
