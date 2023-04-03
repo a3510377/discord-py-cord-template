@@ -192,13 +192,13 @@ def cog_i18n(cls: type | Translator | None = None):
             return cog_class
 
         tr = (
-            Translator(
+            cls
+            if isinstance(cls, Translator)
+            else Translator(
                 __name__,
                 locales_path=Path(traceback.extract_stack()[-2].filename).parent
                 / "locales",
             )
-            if cls is None
-            else cls
         )
 
         setattr(cog_class, "__translator__", tr)
