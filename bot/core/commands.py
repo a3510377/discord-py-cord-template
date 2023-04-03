@@ -2,13 +2,17 @@ import inspect
 from typing import Dict
 
 import discord
-from discord import ApplicationContext, ButtonStyle, ExtensionAlreadyLoaded, Interaction
+from discord import ButtonStyle, ExtensionAlreadyLoaded, Interaction
 from discord import ui as Ui
 from discord.ext import commands
 
-from bot import BaseCog, Bot
-from bot.core.i18n import reload_locales
-from bot.utils.util import get_absolute_name_from_path
+from bot import (
+    ApplicationContext,
+    BaseCog,
+    Bot,
+    get_absolute_name_from_path,
+    reload_locales,
+)
 
 
 class CogConnectionView(Ui.View):

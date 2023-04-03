@@ -1,16 +1,15 @@
 import logging
 import os
-import platform
 from datetime import datetime
 from typing import Any, Optional, Union
 
 import discord
+import rich
 from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
 from bot import __version__
 from bot.core.i18n import command_before_invoke, set_default_locale
-from bot.utils import fix_doc
 
 log = logging.getLogger("bot")
 
@@ -23,6 +22,8 @@ class Bot(commands.Bot):
         self.log = log
         self._uptime: Optional[datetime] = None
         self.base_lang = kwargs.pop("lang", os.getenv("BASE_LANG", "zh-TW"))
+        self.console = rich.get_console()
+
         set_default_locale(self.base_lang)
 
         intents = Intents.default()
@@ -81,13 +82,4 @@ class Bot(commands.Bot):
             self.log.info(f"cog {cog.__cog_name__} 移除完成")
 
     def run(self, *args: Any, **kwargs: Any):
-        for msg in fix_doc(
-            f"""
-            [red]python version: [/red][cyan]{platform.python_version()}[/cyan]
-            [red]py-cord version: [/red][cyan]{discord.__version__}[/cyan]
-            [red]bot version: [/red][cyan]{self.__version__}[/cyan]
-            """
-        ).split("\n"):
-            log.info(msg)
-
         super().run(*args, **kwargs)

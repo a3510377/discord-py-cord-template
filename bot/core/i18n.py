@@ -9,7 +9,7 @@ from discord import ApplicationContext as DiscordApplicationContext
 from discord.commands.core import docs, valid_locales
 from discord.ext.commands import Context as DiscordContext
 
-from bot.utils.base import ApplicationContext, Context
+from ..utils import ApplicationContext, Context
 
 log = logging.getLogger(__name__)
 
@@ -67,9 +67,7 @@ class Translator:
         if all:
             translations = {_file_default_lang: untranslated}
             for lang, translated in self.translations.items():
-                translations[lang] = (
-                    translated.get(untranslated, untranslated) or untranslated
-                )
+                translations[lang] = translated.get(untranslated) or untranslated
             return translations
 
         try:

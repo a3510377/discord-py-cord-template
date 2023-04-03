@@ -233,7 +233,7 @@ class ContentExtractor(ast.NodeVisitor):
         comments = []
 
         line_number -= 1
-        while comment := self.file_comments.get(line_number, None):
+        while comment := self.file_comments.get(line_number):
             comments.append(comment)
             line_number -= 1
 

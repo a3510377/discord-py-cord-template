@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from .core.i18n import *
-from .utils.base import *
+from .utils import *
 
 __all__ = (
     "__version__",
