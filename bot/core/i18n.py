@@ -3,19 +3,22 @@ import traceback
 from contextvars import ContextVar
 from enum import Enum, auto
 from pathlib import Path
-from typing import ClassVar, overload
+from typing import ClassVar, TypeVar, overload
 
 from discord import ApplicationContext as DiscordApplicationContext
+from discord import Cog
 from discord.commands.core import docs, valid_locales
 from discord.ext.commands import Context as DiscordContext
 
-from ..utils import ApplicationContext, Context
+from ..utils import ApplicationContext, Context, I18nCog
 
 log = logging.getLogger(__name__)
 
 _translators: dict[Path, "Translator"] = {}
 _file_default_lang = "zh-TW"
 _default_lang = ContextVar("_default_lang", default=_file_default_lang)
+
+_CogT = TypeVar("_CogT", bound=Cog | I18nCog)
 
 
 class _po_parse_step(Enum):
@@ -99,7 +102,11 @@ def reload_locales() -> None:
 
 
 def _get_langs_translation(path: Path) -> dict[str, dict[str, str]]:
+    if not path.is_dir():
+        return {}
+
     translations = dict.fromkeys(valid_locales, dict[str, str]())
+
     for path in path.iterdir():
         file_lang = path.stem
         if path.is_file() and path.suffix == ".po" and file_lang in valid_locales:
@@ -168,4 +175,36 @@ async def command_before_invoke(
             / "locales",
         )(*args, local=local, **kwargs)
 
-    ctx.__dict__["_"] = _base_translator
+    setattr(ctx, "_", _base_translator)
+
+    return ctx
+
+
+def cog_i18n(cls: type | Translator | None = None):
+    def decorator(cog_class: type[_CogT]) -> type[_CogT]:
+        if hasattr(cog_class, "__translator__"):
+            return cog_class
+
+        tr = (
+            Translator(
+                __name__,
+                locales_path=Path(traceback.extract_stack()[-2].filename).parent
+                / "locales",
+            )
+            if cls is None
+            else cls
+        )
+
+        setattr(cog_class, "__translator__", tr)
+        setattr(cog_class, "__translator_name__", tr(cog_class.__cog_name__, all=True))
+        setattr(
+            cog_class,
+            "__translator_description__",
+            tr(cog_class.__cog_description__, all=True),
+        )
+
+        return cog_class
+
+    if not isinstance(cls, Translator) and cls is not None:
+        return decorator(cls)
+    return decorator

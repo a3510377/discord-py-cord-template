@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, ClassVar, Type, TypeVar, overload
+from typing import TYPE_CHECKING, Any, ClassVar, Protocol, Type, TypeVar, overload
 
 import discord
 from discord import ApplicationContext as DiscordApplicationContext
@@ -10,10 +10,12 @@ __all__ = (
     "I18nContext",
     "ApplicationContext",
     "Context",
+    "I18nCog",
 )
 
 if TYPE_CHECKING:
     from ..core.bot import Bot
+    from ..core.i18n import Translator
 else:
     Bot = None
 
@@ -27,12 +29,16 @@ class BaseCogMeta(discord.CogMeta):
         name, base, attrs = args
 
         attrs["__cog_dev__"] = kwargs.pop("dev", False)
+        attrs["__translator_name__"] = kwargs.pop("tr_name", {})
+        attrs["__translator_description__"] = kwargs.pop("tr_description", {})
 
         return super().__new__(cls, name, base, attrs, **kwargs)
 
 
 class BaseCog(discord.Cog, metaclass=BaseCogMeta):
     __cog_dev__: ClassVar[bool]
+    __translator_name__: ClassVar[dict[str, str]]
+    __translator_description__: ClassVar[dict[str, str]]
 
     def __init__(self, bot: "Bot") -> None:
         self.bot = bot
@@ -67,11 +73,13 @@ class I18nContext:
         raise NotImplementedError
 
 
-# typeof: import bot.core.i18n from command_before_invoke
 class ApplicationContext(I18nContext, DiscordApplicationContext):
     pass
 
 
-# typeof: import bot.core.i18n from command_before_invoke
 class Context(I18nContext, DiscordContext):
     pass
+
+
+class I18nCog(Protocol):
+    __translator__: ClassVar["Translator"]

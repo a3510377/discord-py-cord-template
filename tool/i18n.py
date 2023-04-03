@@ -19,6 +19,11 @@ KEYWORDS_KEYWORDS = (
     "all",
     "guild_local",
 )
+DECORATOR_NAMES = ("cog_i18n",)
+DECORATOR_NAMES_CLASS_KWARGS = (
+    "name",
+    "description",
+)
 
 __version__ = "1.0.0"
 
@@ -178,6 +183,31 @@ class ContentExtractor(ast.NodeVisitor):
             else None
         )
 
+    def get_node_class_locals(self, node: ast.ClassDef) -> list[ast.Constant] | None:
+        for deco in node.decorator_list:
+            if isinstance((func := deco.func), (ast.Name, ast.Attribute)):
+                if getattr(func, "id", getattr(func, "attr", None)) in DECORATOR_NAMES:
+                    break
+        else:
+            self.generic_visit(node)
+            return None
+
+        result = []
+        for k in node.keywords:
+            if k.arg in DECORATOR_NAMES_CLASS_KWARGS:
+                result.append(k.value)
+
+        if isinstance(body := node.body[0], ast.Expr):
+            result.append(self.get_literal_string(body.value))
+
+        return [d for d in result if d]
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        # self.add_entry(node, comments=comments, starting_node=node)
+        for docs in self.get_node_class_locals(node):
+            self.add_entry(docs)
+        self.generic_visit(node)
+
     def visit_Call(self, node: ast.Call) -> None:
         if isinstance(node.func, ast.Name):
             if node.func.id not in KEYWORDS:
@@ -216,7 +246,7 @@ class ContentExtractor(ast.NodeVisitor):
         is_docstring: bool = False,
     ) -> None:
         self.pot_file.add_entry(
-            node.value,
+            inspect.cleandoc(node.value),
             comments=comments,
             lineno=(starting_node or node).lineno,
             is_docstring=is_docstring,

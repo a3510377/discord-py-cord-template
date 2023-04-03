@@ -8,8 +8,7 @@ import rich
 from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
-from bot import __version__
-from bot.core.i18n import command_before_invoke, set_default_locale
+from bot import __version__, command_before_invoke, set_default_locale
 
 log = logging.getLogger("bot")
 

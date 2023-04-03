@@ -9,7 +9,9 @@ from rich.columns import Columns
 from rich.panel import Panel
 from rich.table import Table
 
-from bot import ApplicationContext, BaseCog, Bot
+from bot import ApplicationContext, BaseCog, Bot, Translator
+
+_ = Translator(__name__)
 
 
 class BaseEventsCog(BaseCog):

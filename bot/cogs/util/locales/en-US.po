@@ -13,18 +13,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\cogs\util\info.py:14
+#: bot\cogs\util\info.py:12
+msgid "test_name"
+msgstr ""
+
+#: bot\cogs\util\info.py:15
 msgid "上線時間"
 msgstr "uptime"
 
-#: bot\cogs\util\info.py:15
+#: bot\cogs\util\info.py:16
 msgid "查看機器人上線時間"
 msgstr "Check bot online duration"
 
-#: bot\cogs\util\info.py:26
+#: bot\cogs\util\info.py:27
 msgid "機器人上線時間"
 msgstr "bot up time"
 
-#: bot\cogs\util\info.py:28
+#: bot\cogs\util\info.py:29
 msgid "{days:02d}天 {hours:02d}小時 {minutes:02d}分鐘 {seconds:02d}秒"
 msgstr "{days:02d}d {hours:02d}h {minutes:02d}m {seconds:02d}s"

@@ -13,42 +13,58 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\cogs\admin\clear.py:15
+#: bot\cogs\admin\clear.py:16
 msgid "要刪除的訊息 ID"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:20
+#: bot\cogs\admin\clear.py:21 bot\cogs\admin\clear.py:49
 msgid "原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:21
+#: bot\cogs\admin\clear.py:22
 msgid "刪除訊息的原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:28 bot\cogs\admin\clear.py:99
+#: bot\cogs\admin\clear.py:29 bot\cogs\admin\clear.py:105
 msgid "由 {ctx.author} 清除 - {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:31 bot\cogs\admin\clear.py:80
+#: bot\cogs\admin\clear.py:32 bot\cogs\admin\clear.py:86
 msgid "無原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:37
+#: bot\cogs\admin\clear.py:38
 msgid "刪除完畢"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:83
+#: bot\cogs\admin\clear.py:55
+msgid "要刪除的成員訊息"
+msgstr ""
+
+#: bot\cogs\admin\clear.py:61
+msgid "輸入要刪除的訊息數量"
+msgstr ""
+
+#: bot\cogs\admin\clear.py:68
+msgid "刪除這則訊息以前的訊息(請輸入訊息ID)"
+msgstr ""
+
+#: bot\cogs\admin\clear.py:74
+msgid "刪除以這則訊息以後的訊息(請輸入訊息ID)"
+msgstr ""
+
+#: bot\cogs\admin\clear.py:89
 msgid "錯誤!"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:84
+#: bot\cogs\admin\clear.py:90
 msgid "`before` 和 `after` 選項不得同時出現"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:101 bot\cogs\admin\clear.py:106
+#: bot\cogs\admin\clear.py:107 bot\cogs\admin\clear.py:112
 msgid "原因: {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:105
+#: bot\cogs\admin\clear.py:111
 msgid "訊息刪除成功!"
 msgstr ""

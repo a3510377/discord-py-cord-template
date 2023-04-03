@@ -3,12 +3,13 @@ from datetime import datetime, timedelta
 import discord
 from discord import Embed
 
-from bot import BaseCog, Bot, Translator, ApplicationContext
+from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
 
 _ = Translator(__name__)
 
 
-class InfoCog(BaseCog):
+@cog_i18n(_)
+class InfoCog(BaseCog, name="test_name"):
     @discord.slash_command(
         guild_only=True,
         name_localizations=_("上線時間", all=True),
