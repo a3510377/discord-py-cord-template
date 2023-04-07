@@ -1,0 +1,39 @@
+name: 功能要求 - Feature Request
+description: 建議此模板的功能 - Suggest template additions
+labels:
+  - feature request
+
+body:
+  - type: input
+    attributes:
+      label: 摘要 - Summary
+      description: >
+        功能請求的簡短摘要。
+        A short summary of the feature request.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 問題 - Problem
+      description: >
+        請重點描述您所遇到的問題。
+        Please describe the problem you are experiencing.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 具體實現 - Implementation
+      description: >
+        你想要這個模板添加/修改什麼來達成你的要求?
+        What would you like to add/modify to this template to achieve your requirements?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 備註 - Remark
+      description: >
+        如果還有什麼要說的，請在這裡說。
+        If there is anything else to say, please do so here.

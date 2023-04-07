@@ -1,0 +1,77 @@
+name: 錯誤報告 - Bug Report
+description: 報告不符預期的執行結果及錯誤 - Report unexpected execution results and errors
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: >
+        首先感謝您花時間填寫錯誤，須注意的是該表僅用於處理 `錯誤`。
+        First of all thank you for taking the time to fill in the errors, please note that this form is for `errors` only.
+
+  - type: input
+    attributes:
+      label: 摘要 - Summary
+      description: >
+        該錯誤的簡短摘要。
+        A short summary of the error.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 問題 - Problem
+      description: >
+        請重點描述您所遇到的問題。
+        Please describe the problem you are experiencing.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 最小的問題展示程式 - Minimal Reproducible Code
+      description: >
+        你做了什麼觸發了該錯誤。
+        What you did to make it happen.
+
+  - type: textarea
+    attributes:
+      label: 預期狀況
+      description: >
+        你期望他執行的結果?
+        What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 實際狀況 - Actual Results
+      description: >
+        發生了什麼?
+        What actually happened?
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      description: >
+        為確保出現相同的問題回報，需要麻煩您完成以下檢查表。
+        In order to ensure the same problem returns, you are kindly requested to complete the following checklist.
+      options:
+        - label: >
+            我已經在打開的問題中搜索，且並無重複。
+            I have searched the open issues for duplicates.
+          required: true
+        - label: >
+            上述資料中皆無 TOKEN 洩漏。
+            There is no TOKEN leakage in the above data.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: 備註 - Remark
+      description: >
+        如果還有什麼要說的，請在這裡說。
+        If there is anything else to say, please do so here.
