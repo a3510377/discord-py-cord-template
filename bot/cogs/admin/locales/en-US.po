@@ -17,7 +17,7 @@ msgstr ""
 msgid "要刪除的訊息 ID"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:21 bot\cogs\admin\clear.py:49
+#: bot\cogs\admin\clear.py:21 bot\cogs\admin\clear.py:53
 msgid "原因"
 msgstr ""
 
@@ -25,46 +25,46 @@ msgstr ""
 msgid "刪除訊息的原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:29 bot\cogs\admin\clear.py:105
+#: bot\cogs\admin\clear.py:31 bot\cogs\admin\clear.py:109
 msgid "由 {ctx.author} 清除 - {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:32 bot\cogs\admin\clear.py:86
+#: bot\cogs\admin\clear.py:34 bot\cogs\admin\clear.py:90
 msgid "無原因"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:38
+#: bot\cogs\admin\clear.py:39
 msgid "刪除完畢"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:55
+#: bot\cogs\admin\clear.py:59
 msgid "要刪除的成員訊息"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:61
+#: bot\cogs\admin\clear.py:65
 msgid "輸入要刪除的訊息數量"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:68
+#: bot\cogs\admin\clear.py:72
 msgid "刪除這則訊息以前的訊息(請輸入訊息ID)"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:74
+#: bot\cogs\admin\clear.py:78
 msgid "刪除以這則訊息以後的訊息(請輸入訊息ID)"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:89
+#: bot\cogs\admin\clear.py:93
 msgid "錯誤!"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:90
+#: bot\cogs\admin\clear.py:94
 msgid "`before` 和 `after` 選項不得同時出現"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:107 bot\cogs\admin\clear.py:112
+#: bot\cogs\admin\clear.py:111 bot\cogs\admin\clear.py:116
 msgid "原因: {reason}"
 msgstr ""
 
-#: bot\cogs\admin\clear.py:111
+#: bot\cogs\admin\clear.py:115
 msgid "訊息刪除成功!"
 msgstr ""

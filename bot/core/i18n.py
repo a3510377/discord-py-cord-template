@@ -158,7 +158,7 @@ async def command_before_invoke(
     ctx: DiscordContext | DiscordApplicationContext,
 ) -> Context | ApplicationContext:
     def _base_translator(*args, **kwargs):
-        if kwargs.pop("guild_local"):
+        if kwargs.pop("guild_local", None):
             if isinstance(ctx, DiscordApplicationContext):
                 local = ctx.guild_locale
             else:
@@ -176,7 +176,7 @@ async def command_before_invoke(
             / "locales",
         )(*args, local=local, **kwargs)
 
-    setattr(ctx, "_", _base_translator)
+    ctx.__dict__["_"] = _base_translator
 
     return ctx
 

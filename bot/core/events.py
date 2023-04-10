@@ -89,7 +89,7 @@ class BaseEventsCog(BaseCog):
         if isinstance(error, (CommandNotFound, NotOwner)):
             return
 
-        self.log.error(error)
+        self.log.error(error, stack_info=True)
 
     @discord.Cog.listener()
     async def on_application_command_error(
