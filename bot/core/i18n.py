@@ -97,7 +97,8 @@ def set_default_locale(locale: str) -> None:
 
 
 def reload_locales() -> None:
-    for translator in _translators:
+    log.info("Reloading locales")
+    for translator in _translators.values():
         translator.load_translations()
 
 
