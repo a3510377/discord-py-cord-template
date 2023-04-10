@@ -12,7 +12,7 @@ class ClearCog(BaseCog):
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "message_id",
-        int,
+        str,
         description_localizations=_("要刪除的訊息 ID", all=True),
     )
     @discord.option(
@@ -22,23 +22,27 @@ class ClearCog(BaseCog):
         description_localizations=_("刪除訊息的原因", all=True),
         default="",
     )
-    async def delete(self, ctx: ApplicationContext, message_id: int, reason: str):
+    async def delete(self, ctx: ApplicationContext, message_id: str, reason: str):
         message: Message = await ctx.fetch_message(int(message_id))
-        content = ctx.message.content.strip()
+        content = message.content.strip()
+        author = ctx.author
 
-        reason = ctx._("由 {ctx.author} 清除 - {reason}").format(
-            author=ctx.author,
-            message=f"{content}..." if len(content) > 10 else content,
-            reason=reason or ctx._("無原因"),
+        await message.delete(
+            reason=ctx._("由 {ctx.author} 清除 - {reason}", guild_local=True).format(
+                author=ctx.author,
+                message=f"{content}..." if len(content) > 10 else content,
+                reason=reason or ctx._("無原因", guild_local=True),
+            )
         )
-
-        await message.delete(reason=reason)
 
         embed = Embed(
             title=ctx._("刪除完畢"),
             description=reason,
         )
-        embed.set_author(name=message.author, icon_url=message.author.avatar.url)
+        embed.set_author(
+            name=author,
+            icon_url=author.avatar.url if author.avatar.url else None,
+        )
         await ctx.respond(embed=embed, ephemeral=True)
 
     @discord.slash_command(guild_only=True)
