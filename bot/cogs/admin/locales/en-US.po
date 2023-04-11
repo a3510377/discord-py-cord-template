@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2023-04-02 22:39+0800\n"
+"POT-Creation-Date: 2023-04-02 18:21+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: FULL NAME <EMAIL@ADDRESS>\n"
@@ -13,58 +13,95 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\cogs\admin\clear.py:16
+#: bot\cogs\admin\clear.py:13
+msgid "刪除"
+msgstr "delete"
+
+#: bot\cogs\admin\clear.py:14
+msgid "刪除一個訊息"
+msgstr "Delete a message"
+
+#: bot\cogs\admin\clear.py:20
+msgid "訊息id"
+msgstr "message_id"
+
+#: bot\cogs\admin\clear.py:21
 msgid "要刪除的訊息 ID"
-msgstr ""
+msgstr "The message's ID that you want to delete"
 
-#: bot\cogs\admin\clear.py:21 bot\cogs\admin\clear.py:53
+#: bot\cogs\admin\clear.py:26 bot\cogs\admin\clear.py:62
+#: bot\cogs\admin\clear.py:63
 msgid "原因"
-msgstr ""
+msgstr "reason"
 
-#: bot\cogs\admin\clear.py:22
+#: bot\cogs\admin\clear.py:27
 msgid "刪除訊息的原因"
-msgstr ""
+msgstr "The reason for delete message"
 
-#: bot\cogs\admin\clear.py:31 bot\cogs\admin\clear.py:109
+#: bot\cogs\admin\clear.py:36 bot\cogs\admin\clear.py:123
 msgid "由 {ctx.author} 清除 - {reason}"
-msgstr ""
+msgstr "Deleted by {ctx.author} - {reason}"
 
-#: bot\cogs\admin\clear.py:34 bot\cogs\admin\clear.py:90
+#: bot\cogs\admin\clear.py:39 bot\cogs\admin\clear.py:104
 msgid "無原因"
-msgstr ""
+msgstr "No reason"
 
-#: bot\cogs\admin\clear.py:39
+#: bot\cogs\admin\clear.py:44
 msgid "刪除完畢"
-msgstr ""
+msgstr "Delete complete"
 
-#: bot\cogs\admin\clear.py:59
+#: bot\cogs\admin\clear.py:55
+msgid "批量刪除"
+msgstr "purge"
+
+#: bot\cogs\admin\clear.py:56
+msgid "刪除大量訊息"
+msgstr "Delete some messages"
+
+#: bot\cogs\admin\clear.py:69
+msgid "成員"
+msgstr "member"
+
+#: bot\cogs\admin\clear.py:70
 msgid "要刪除的成員訊息"
-msgstr ""
+msgstr "The messages' author that want to be deleted"
 
-#: bot\cogs\admin\clear.py:65
+#: bot\cogs\admin\clear.py:76
+msgid "數量"
+msgstr "count"
+
+#: bot\cogs\admin\clear.py:77
 msgid "輸入要刪除的訊息數量"
-msgstr ""
+msgstr "Enter the messages count that want to be deleted"
 
-#: bot\cogs\admin\clear.py:72
+#: bot\cogs\admin\clear.py:84
+msgid "以前"
+msgstr "before"
+
+#: bot\cogs\admin\clear.py:85
 msgid "刪除這則訊息以前的訊息(請輸入訊息ID)"
-msgstr ""
+msgstr "Delete the messages before this message(Please enter message ID)"
 
-#: bot\cogs\admin\clear.py:78
+#: bot\cogs\admin\clear.py:91
+msgid "之後"
+msgstr "after"
+
+#: bot\cogs\admin\clear.py:92
 msgid "刪除以這則訊息以後的訊息(請輸入訊息ID)"
-msgstr ""
+msgstr "Delete the messages after this message(Please enter message ID)"
 
-#: bot\cogs\admin\clear.py:93
+#: bot\cogs\admin\clear.py:107
 msgid "錯誤!"
-msgstr ""
+msgstr "Error!"
 
-#: bot\cogs\admin\clear.py:94
+#: bot\cogs\admin\clear.py:108
 msgid "`before` 和 `after` 選項不得同時出現"
-msgstr ""
+msgstr "`before` and `after` options can not be showed on the same time"
 
-#: bot\cogs\admin\clear.py:111 bot\cogs\admin\clear.py:116
+#: bot\cogs\admin\clear.py:125 bot\cogs\admin\clear.py:130
 msgid "原因: {reason}"
-msgstr ""
+msgstr "Reason: {reason}"
 
-#: bot\cogs\admin\clear.py:115
+#: bot\cogs\admin\clear.py:129
 msgid "訊息刪除成功!"
-msgstr ""
+msgstr "Message delete successfully"
