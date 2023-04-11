@@ -1,6 +1,13 @@
 name: Generate contributions
 
-on: [push]
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
