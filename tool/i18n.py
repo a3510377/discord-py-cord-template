@@ -86,7 +86,7 @@ class POTFileManager:
 
                 potfile.metadata |= {"Language": lang}
 
-                old_potfile = current_file
+                old_potfile = potfile
                 if not overwrite and current_file.is_file():
                     old_potfile = pofile(current_file)
                     old_potfile.merge(potfile)
