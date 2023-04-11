@@ -8,11 +8,16 @@ _ = Translator(__name__)
 
 @cog_i18n
 class ClearCog(BaseCog):
-    @discord.slash_command(guild_only=True)
+    @discord.slash_command(
+        guild_only=True, 
+        name_localizations=_("刪除", all=True),
+        description_localizations=_("刪除一個訊息", all=True)
+        )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "message_id",
         str,
+        name_localizations=_("訊息id", all=True),
         description_localizations=_("要刪除的訊息 ID", all=True),
     )
     @discord.option(
@@ -29,7 +34,7 @@ class ClearCog(BaseCog):
 
         await message.delete(
             reason=ctx._("由 {ctx.author} 清除 - {reason}", guild_local=True).format(
-                author=ctx.author,
+                ctx=ctx,
                 message=f"{content}..." if len(content) > 10 else content,
                 reason=reason or ctx._("無原因", guild_local=True),
             )
@@ -45,23 +50,30 @@ class ClearCog(BaseCog):
         )
         await ctx.respond(embed=embed, ephemeral=True)
 
-    @discord.slash_command(guild_only=True)
+    @discord.slash_command(
+        guild_only=True,
+        name_localizations=_("批量刪除", all=True),
+        description_localizations=_("刪除大量訊息", all=True)
+    )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "reason",
         str,
+        name_localizations=_("原因", all=True),
         description_localizations=_("原因", all=True),
         default=None,
     )
     @discord.option(
         "member",
         Member,
+        name_localizations=_("成員", all=True),
         description_localizations=_("要刪除的成員訊息", all=True),
         default=None,
     )
     @discord.option(
         "count",
         int,
+        name_localizations=_("數量", all=True),
         description_localizations=_("輸入要刪除的訊息數量", all=True),
         min_value=1,
         max_value=512,
@@ -69,12 +81,14 @@ class ClearCog(BaseCog):
     @discord.option(
         "before",
         str,
+        name_localizations=_("以前", all=True),
         description_localizations=_("刪除這則訊息以前的訊息(請輸入訊息ID)", all=True),
         default=None,
     )
     @discord.option(
         "after",
         str,
+        name_localizations=_("之後", all=True),
         description_localizations=_("刪除以這則訊息以後的訊息(請輸入訊息ID)", all=True),
         default=None,
     )
