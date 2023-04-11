@@ -9,10 +9,10 @@ _ = Translator(__name__)
 @cog_i18n
 class ClearCog(BaseCog):
     @discord.slash_command(
-        guild_only=True, 
+        guild_only=True,
         name_localizations=_("刪除", all=True),
-        description_localizations=_("刪除一個訊息", all=True)
-        )
+        description_localizations=_("刪除一個訊息", all=True),
+    )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "message_id",
@@ -53,7 +53,7 @@ class ClearCog(BaseCog):
     @discord.slash_command(
         guild_only=True,
         name_localizations=_("批量刪除", all=True),
-        description_localizations=_("刪除大量訊息", all=True)
+        description_localizations=_("刪除大量訊息", all=True),
     )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
