@@ -4,6 +4,7 @@ import discord
 from discord import ApplicationContext as DiscordApplicationContext
 from discord.ext.commands import Context as DiscordContext
 
+
 __all__ = (
     "BaseCog",
     "Bot",
@@ -15,7 +16,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from ..core.bot import Bot
-    from ..core.i18n import Translator
+    from ..core.i18n import Translator, TranslatorString
 else:
     Bot = None
 
@@ -54,7 +55,7 @@ class I18nContext:
         *,
         local: str | None = None,
         guild_local: bool = False,
-    ) -> str:
+    ) -> "TranslatorString":
         ...
 
     @overload

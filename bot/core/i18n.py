@@ -1,3 +1,4 @@
+from collections import UserDict
 import logging
 import traceback
 from contextvars import ContextVar
@@ -5,7 +6,11 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import ClassVar, TypeVar, overload
 
-from discord import ApplicationContext as DiscordApplicationContext
+from discord import (
+    ApplicationContext as DiscordApplicationContext,
+    ContextMenuCommand,
+    SlashCommand,
+)
 from discord import Cog
 from discord.commands.core import docs, valid_locales
 from discord.ext.commands import Context as DiscordContext
@@ -19,6 +24,7 @@ _file_default_lang = "zh-TW"
 _default_lang = ContextVar("_default_lang", default=_file_default_lang)
 
 _CogT = TypeVar("_CogT", bound=Cog | I18nCog)
+_CommandT = TypeVar("_CommandT", bound=SlashCommand | ContextMenuCommand)
 
 
 class _po_parse_step(Enum):
@@ -65,21 +71,37 @@ class Translator:
         *,
         local: str | None = None,
         all: bool | None = None,
-    ) -> str | dict[str, str]:
+    ) -> "TranslatorString" | dict[str, str]:
         local = local or get_default_locale()
+
+        translations = {_file_default_lang: untranslated}
+        for lang, translated in self.translations.items():
+            translations[lang] = translated.get(untranslated) or untranslated
+
         if all:
-            translations = {_file_default_lang: untranslated}
-            for lang, translated in self.translations.items():
-                translations[lang] = translated.get(untranslated) or untranslated
             return translations
 
         try:
-            return self.translations[local][untranslated]
+            untranslated = self.translations[local][untranslated]
         except KeyError:
-            return untranslated
+            pass
+
+        return TranslatorString(untranslated, translations)
 
     def load_translations(self) -> None:
         self.translations = _get_langs_translation(self.locales_path)
+
+
+class TranslatorString(UserDict):
+    def __init__(self, str_data: str, dict_data: dict) -> None:
+        self.str_data = str_data
+        self.data = dict_data
+
+    def __repr__(self) -> str:
+        return self.str_data
+
+    def __str__(self) -> str:
+        return self.str_data
 
 
 def get_default_locale() -> str:
@@ -215,3 +237,15 @@ def cog_i18n(cls: type | Translator | None = None):
     if not isinstance(cls, Translator) and cls is not None:
         return decorator(cls)
     return decorator
+
+
+# def i18n_command(command: _CommandT) -> _CommandT:
+#     if command.name_localizations is None:
+#         command.name_localizations = {}
+#     else:
+#         command.name_localizations
+
+#     if isinstance(command, SlashCommand):
+#         ...
+
+#     return command
