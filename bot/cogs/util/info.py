@@ -4,16 +4,18 @@ import discord
 from discord import Embed
 
 from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
+from bot.core.i18n import i18n_command
 
 _ = Translator(__name__)
 
 
 @cog_i18n
 class InfoCog(BaseCog):
+    @i18n_command
     @discord.slash_command(
         guild_only=True,
-        name_localizations=_("上線時間", all=True),
-        description_localizations=_("查看機器人上線時間", all=True),
+        i18n_name=_("上線時間"),
+        i18n_description=_("查看機器人上線時間"),
     )
     async def uptime(self, ctx: ApplicationContext):
         uptime: timedelta = datetime.now() - self.bot.uptime

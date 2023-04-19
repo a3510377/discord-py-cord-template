@@ -2,29 +2,31 @@ import discord
 from discord import Embed, Member, Message
 
 from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
+from bot.core.i18n import i18n_command
 
 _ = Translator(__name__)
 
 
 @cog_i18n
 class ClearCog(BaseCog):
+    @i18n_command
     @discord.slash_command(
         guild_only=True,
-        name_localizations=_("刪除", all=True),
-        description_localizations=_("刪除一個訊息", all=True),
+        i18n_name=_("刪除"),
+        i18n_description=_("刪除一個訊息"),
     )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "message_id",
         str,
-        name_localizations=_("訊息id", all=True),
-        description_localizations=_("要刪除的訊息 ID", all=True),
+        i18n_name=_("訊息id"),
+        i18n_description=_("要刪除的訊息 ID"),
     )
     @discord.option(
         "reason",
         str,
-        name_localizations=_("原因", all=True),
-        description_localizations=_("刪除訊息的原因", all=True),
+        i18n_name=_("原因"),
+        i18n_description=_("刪除訊息的原因"),
         default="",
     )
     async def delete(self, ctx: ApplicationContext, message_id: str, reason: str):
@@ -52,44 +54,44 @@ class ClearCog(BaseCog):
 
     @discord.slash_command(
         guild_only=True,
-        name_localizations=_("批量刪除", all=True),
-        description_localizations=_("刪除大量訊息", all=True),
+        i18n_name=_("批量刪除"),
+        i18n_description=_("刪除大量訊息"),
     )
     @discord.default_permissions(manage_messages=True)
     @discord.option(
         "reason",
         str,
-        name_localizations=_("原因", all=True),
-        description_localizations=_("原因", all=True),
+        i18n_name=_("原因"),
+        i18n_description=_("原因"),
         default=None,
     )
     @discord.option(
         "member",
         Member,
-        name_localizations=_("成員", all=True),
-        description_localizations=_("要刪除的成員訊息", all=True),
+        i18n_name=_("成員"),
+        i18n_description=_("要刪除的成員訊息"),
         default=None,
     )
     @discord.option(
         "count",
         int,
-        name_localizations=_("數量", all=True),
-        description_localizations=_("輸入要刪除的訊息數量", all=True),
+        i18n_name=_("數量"),
+        i18n_description=_("輸入要刪除的訊息數量"),
         min_value=1,
         max_value=512,
     )
     @discord.option(
         "before",
         str,
-        name_localizations=_("以前", all=True),
-        description_localizations=_("刪除這則訊息以前的訊息(請輸入訊息ID)", all=True),
+        i18n_name=_("以前"),
+        i18n_description=_("刪除這則訊息以前的訊息(請輸入訊息ID)"),
         default=None,
     )
     @discord.option(
         "after",
         str,
-        name_localizations=_("之後", all=True),
-        description_localizations=_("刪除以這則訊息以後的訊息(請輸入訊息ID)", all=True),
+        i18n_name=_("之後"),
+        i18n_description=_("刪除以這則訊息以後的訊息(請輸入訊息ID)"),
         default=None,
     )
     async def purge(

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections import UserDict
 import logging
 import traceback
@@ -60,7 +62,7 @@ class Translator:
 
     # fmt: off
     @overload
-    def __call__(self, untranslated: str, *, local: str | None = None) -> str: ...  # noqa
+    def __call__(self, untranslated: str, *, local: str | None = None) -> "TranslatorString": ...  # noqa
     @overload
     def __call__(self, untranslated: str, *, local: str | None = None, all: bool = True) -> dict[str, str]: ...  # noqa
     # fmt: on
@@ -239,13 +241,28 @@ def cog_i18n(cls: type | Translator | None = None):
     return decorator
 
 
-# def i18n_command(command: _CommandT) -> _CommandT:
-#     if command.name_localizations is None:
-#         command.name_localizations = {}
-#     else:
-#         command.name_localizations
+def i18n_command(command: _CommandT) -> _CommandT:
+    kwargs = command.__original_kwargs__
+    if isinstance(name := kwargs.get("i18n_name", None), TranslatorString):
+        if command.name_localizations is None:
+            command.name_localizations = {}
+        command.name_localizations |= dict(name)
 
-#     if isinstance(command, SlashCommand):
-#         ...
+    if isinstance(command, SlashCommand):
+        if isinstance(description := kwargs.get("description"), TranslatorString):
+            if command.description_localizations is None:
+                command.description_localizations = {}
+            command.description_localizations |= dict(description)
 
-#     return command
+        for option in command.options:
+            if isinstance(option.name, TranslatorString):
+                if option.name_localizations is None:
+                    command.name_localizations = {}
+                command.name_localizations |= dict(option.name)
+
+            if isinstance(option.description, TranslatorString):
+                if option.description_localizations is None:
+                    command.description_localizations = {}
+                command.description_localizations |= dict(option.description)
+
+    return command
