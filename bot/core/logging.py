@@ -1,10 +1,12 @@
 import copy
 import logging
+import os
 import re
 from datetime import datetime, timedelta
 from logging import Formatter, Logger, LogRecord
 from logging.handlers import BaseRotatingHandler
 from pathlib import Path
+import sys
 from typing import Optional, Union
 
 import rich
@@ -145,6 +147,20 @@ class LogTimeRotatingFileHandler(BaseRotatingHandler):
         self.stream = self._open()
 
 
+class PackagePathFilter(logging.Filter):
+    def filter(self, record):
+        pathname = record.pathname
+        sys_path = list(sys.path)
+        for i in range(len(sys_path)):
+            sys_path[i] = os.path.abspath(sys_path[i])
+        for path in sys_path:
+            if pathname.startswith(path):
+                relative = os.path.relpath(pathname, path)
+                record.relative = relative
+                break
+        return True
+
+
 def init_logging(level: int, directory: Optional[StrPath] = None) -> Logger:
     dpy_logger = logging.getLogger("discord")
     warnings_logger = logging.getLogger("py.warnings")
@@ -155,7 +171,7 @@ def init_logging(level: int, directory: Optional[StrPath] = None) -> Logger:
 
     shell_formatter = logging.Formatter("{message}", datefmt="[%X]", style="{")
     file_formatter = logging.Formatter(
-        "[{asctime}] [{levelname}:{name}]: {message}",
+        "[{asctime}] [{levelname}:{name}] [{relative}:{lineno}]: {message}",
         datefmt="%Y-%m-%d %H:%M:%S",
         style="{",
     )
@@ -184,12 +200,14 @@ def init_logging(level: int, directory: Optional[StrPath] = None) -> Logger:
         tracebacks_theme=(PygmentsSyntaxTheme(MonokaiStyle)),
     )
     shell_handler.setLevel(logging.DEBUG)
+    shell_handler.addFilter(PackagePathFilter())
     shell_handler.setFormatter(shell_formatter)
 
     file_handler = LogTimeRotatingFileHandler(
         log.name, markup=True, directory=directory
     )
     file_handler.setLevel(logging.DEBUG)
+    file_handler.addFilter(PackagePathFilter())
     file_handler.setFormatter(file_formatter)
 
     root_logger = logging.getLogger()
