@@ -1,3 +1,4 @@
+import inspect
 from typing import TYPE_CHECKING, Any, ClassVar, Protocol, Type, TypeVar, overload
 
 import discord
@@ -14,9 +15,10 @@ __all__ = (
     "I18nCog",
 )
 
+from ..core.i18n import Translator, TranslatorString
+
 if TYPE_CHECKING:
     from ..core.bot import Bot
-    from ..core.i18n import Translator, TranslatorString
 else:
     Bot = None
 
@@ -26,20 +28,32 @@ CogT = TypeVar("CogT", bound="BaseCog")
 class BaseCogMeta(discord.CogMeta):
     __cog_dev__: bool
 
-    def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
+    def __new__(
+        cls: Type[CogT],
+        *args: Any,
+        tr_name: TranslatorString | None = None,
+        tr_description: TranslatorString | None = None,
+        **kwargs: Any,
+    ) -> CogT:
         name, base, attrs = args
 
         attrs["__cog_dev__"] = kwargs.pop("dev", False)
-        attrs["__translator_name__"] = kwargs.pop("tr_name", {})
-        attrs["__translator_description__"] = kwargs.pop("tr_description", {})
+        attrs["__translator_name__"] = tr_name or TranslatorString.from_str(
+            kwargs.get("name", name)
+        )
+        attrs[
+            "__translator_description__"
+        ] = tr_description or TranslatorString.from_str(
+            kwargs.pop("description", inspect.cleandoc(attrs.get("__doc__", "")))
+        )
 
         return super().__new__(cls, name, base, attrs, **kwargs)
 
 
 class BaseCog(discord.Cog, metaclass=BaseCogMeta):
     __cog_dev__: ClassVar[bool]
-    __translator_name__: ClassVar[dict[str, str]]
-    __translator_description__: ClassVar[dict[str, str]]
+    __translator_name__: ClassVar[TranslatorString]
+    __translator_description__: ClassVar[TranslatorString]
 
     def __init__(self, bot: "Bot") -> None:
         self.bot = bot

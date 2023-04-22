@@ -82,3 +82,6 @@ class Bot(commands.Bot):
 
     def run(self, *args: Any, **kwargs: Any):
         super().run(*args, **kwargs)
+
+    async def help(self) -> None:
+        return

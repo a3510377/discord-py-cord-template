@@ -6,7 +6,7 @@ import traceback
 from contextvars import ContextVar
 from enum import Enum, auto
 from pathlib import Path
-from typing import ClassVar, TypeVar, overload
+from typing import ClassVar, TypeVar, overload, TYPE_CHECKING
 
 from discord import (
     ApplicationContext as DiscordApplicationContext,
@@ -17,7 +17,8 @@ from discord import Cog
 from discord.commands.core import docs, valid_locales
 from discord.ext.commands import Context as DiscordContext
 
-from ..utils import ApplicationContext, Context, I18nCog
+if TYPE_CHECKING:
+    from ..utils import ApplicationContext, Context, I18nCog
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ _translators: dict[Path, "Translator"] = {}
 _file_default_lang = "zh-TW"
 _default_lang = ContextVar("_default_lang", default=_file_default_lang)
 
-_CogT = TypeVar("_CogT", bound=Cog | I18nCog)
+_CogT = TypeVar("_CogT", bound="Cog | I18nCog")
 _CommandT = TypeVar("_CommandT", bound=SlashCommand | ContextMenuCommand)
 
 
@@ -95,7 +96,7 @@ class Translator:
 
 
 class TranslatorString(UserDict):
-    def __init__(self, str_data: str, dict_data: dict) -> None:
+    def __init__(self, str_data: str, dict_data: dict[str, str]) -> None:
         self.str_data = str_data
         self.data = dict_data
 
@@ -104,6 +105,12 @@ class TranslatorString(UserDict):
 
     def __str__(self) -> str:
         return self.str_data
+
+    @classmethod
+    def from_str(cls, str_data: str | TranslatorString) -> TranslatorString:
+        if isinstance(str_data, TranslatorString):
+            return str_data
+        return cls(str_data, {k: str_data for k in valid_locales})
 
 
 def get_default_locale() -> str:
@@ -180,7 +187,7 @@ def _unescape(string):
 
 async def command_before_invoke(
     ctx: DiscordContext | DiscordApplicationContext,
-) -> Context | ApplicationContext:
+) -> "Context" | "ApplicationContext":
     def _base_translator(*args, **kwargs):
         if kwargs.pop("guild_local", None):
             if isinstance(ctx, DiscordApplicationContext):

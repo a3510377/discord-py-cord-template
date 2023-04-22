@@ -94,6 +94,10 @@ class BaseCommandsCog(BaseCog):
             view=CogConnectionView(self.bot),
         )
 
+    @discord.slash_command(guild_only=True)
+    async def help(self, ctx: ApplicationContext):
+        await self.bot.help()
+
 
 def setup(bot: "Bot"):
     bot.add_cog(BaseCommandsCog(bot))

@@ -1,3 +1,7 @@
 {
-  "recommendations": ["ms-python.python", "editorconfig.editorconfig"]
+  "recommendations": [
+    "ms-python.python",
+    "editorconfig.editorconfig",
+    "gettext.gettext"
+  ]
 }
