@@ -8,7 +8,14 @@ import rich
 from discord import ApplicationCommand, Intents
 from discord.ext import commands
 
-from bot import __version__, command_before_invoke, set_default_locale
+from bot import (
+    ApplicationContext,
+    Context,
+    __version__,
+    command_before_invoke,
+    set_default_locale,
+)
+from bot.core.help import HelpView
 
 log = logging.getLogger("bot")
 
@@ -83,5 +90,9 @@ class Bot(commands.Bot):
     def run(self, *args: Any, **kwargs: Any):
         super().run(*args, **kwargs)
 
-    async def help(self) -> None:
-        return
+    async def help(self, ctx: ApplicationContext | Context) -> HelpView:
+        modal = HelpView(self)
+
+        await modal.setup(ctx)
+
+        return modal

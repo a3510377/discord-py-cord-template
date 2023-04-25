@@ -5,7 +5,6 @@ import discord
 from discord import ApplicationContext as DiscordApplicationContext
 from discord.ext.commands import Context as DiscordContext
 
-
 __all__ = (
     "BaseCog",
     "Bot",
@@ -82,6 +81,10 @@ class I18nContext:
         all: bool = True,
     ) -> dict[str, str]:
         ...
+
+    # typeof: import bot.core.i18n from command_before_invoke
+    def local(guild_local: bool = None) -> str:
+        raise NotImplementedError
 
     # typeof: import bot.core.i18n from command_before_invoke
     def _() -> ...:

@@ -6,7 +6,7 @@ import traceback
 from contextvars import ContextVar
 from enum import Enum, auto
 from pathlib import Path
-from typing import ClassVar, TypeVar, overload, TYPE_CHECKING
+from typing import ClassVar, LiteralString, TypeVar, overload, TYPE_CHECKING
 
 from discord import (
     ApplicationContext as DiscordApplicationContext,
@@ -112,6 +112,16 @@ class TranslatorString(UserDict):
             return str_data
         return cls(str_data, {k: str_data for k in valid_locales})
 
+    # fmt: off
+    @overload
+    def format(self: LiteralString, *args: LiteralString, **kwargs: LiteralString) -> LiteralString: ...  # noqa
+    @overload
+    def format(self, *args: object, **kwargs: object) -> str: ...  # noqa
+    # fmt: on
+
+    def format(self, *args, **kwargs):
+        return str(self).format(*args, **kwargs)
+
 
 def get_default_locale() -> str:
     return _default_lang.get()
@@ -188,7 +198,7 @@ def _unescape(string):
 async def command_before_invoke(
     ctx: DiscordContext | DiscordApplicationContext,
 ) -> "Context" | "ApplicationContext":
-    def _base_translator(*args, **kwargs):
+    def _get_lang(**kwargs):
         if kwargs.pop("guild_local", None):
             if isinstance(ctx, DiscordApplicationContext):
                 local = ctx.guild_locale
@@ -201,12 +211,16 @@ async def command_before_invoke(
                 else ctx.guild.preferred_locale
             )
 
+        return local or get_default_locale()
+
+    def _base_translator(*args, **kwargs):
         return Translator(
             __name__,
             locales_path=Path(traceback.extract_stack()[-2].filename).parent
             / "locales",
-        )(*args, local=local, **kwargs)
+        )(*args, local=_get_lang(**kwargs), **kwargs)
 
+    ctx.__dict__["local"] = _get_lang
     ctx.__dict__["_"] = _base_translator
 
     return ctx
