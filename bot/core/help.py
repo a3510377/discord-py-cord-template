@@ -1,21 +1,24 @@
-from discord import ApplicationCommand, Interaction, SelectOption
+from collections import defaultdict
+
+from discord import Cog, Embed, Interaction, SelectOption
 from discord.ext.commands import Command
 from discord.ui import Select, View, select
 from discord.utils import async_all
 
-from bot import ApplicationContext, Bot, Context
+from bot import ApplicationContext, BaseCog, Bot, Context
 
 
 class HelpView(View):
     def __init__(self, bot: "Bot") -> None:
-        super().__init__()
+        super().__init__(timeout=60)
 
         self.bot = bot
+        self.pages = defaultdict[str, Embed](Embed)
+        self.pages_select_options = dict[str, SelectOption]()
 
     async def setup(self, ctx: ApplicationContext | Context) -> None:
         bot = self.bot
 
-        commands: list[ApplicationCommand] = []
         prefixed_commands: list[Command] = []
         for cmd in bot.application_commands:
             if cmd.guild_only and ctx.guild is None:
@@ -36,7 +39,23 @@ class HelpView(View):
                 ):
                     continue
 
-            commands.append(cmd)
+            cog = cmd.cog
+            if cog:
+                cog: Cog
+                if isinstance(cog, BaseCog):
+                    lang = ctx.local()
+                    option = SelectOption(
+                        label=cog.__translator_name__.get(lang),
+                        description=cog.__translator_description__.get(lang),
+                    )
+                else:
+                    option = SelectOption(
+                        label=cog.qualified_name,
+                        description=cog.description,
+                    )
+
+                option.value = (class_name := cog.__class__.__name__)
+                self.pages_select_options[class_name] = option
 
         for cmd in bot.prefixed_commands.values():
             if not await async_all(predicate(ctx) for predicate in cmd.checks):
@@ -45,19 +64,11 @@ class HelpView(View):
             prefixed_commands.append(cmd)
 
         select: Select = self.get_item("__core_help_view_select_help")
-        options = select.options
-
-        options.append(
-            SelectOption(
-                label="1",
-                value="test",
-                description="3",
-            )
-        )
+        select.options.clear()
+        select.options.extend(self.pages_select_options.values())
 
     @select(custom_id="__core_help_view_select_help")
     async def select_help(self, select: Select, interaction: Interaction):
-        print(select.values[0])
         await interaction.response.edit_message(view=self)
 
     async def on_timeout(self) -> None:

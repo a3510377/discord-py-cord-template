@@ -74,6 +74,7 @@ class Translator:
         *,
         local: str | None = None,
         all: bool | None = None,
+        **kwargs,
     ) -> "TranslatorString" | dict[str, str]:
         local = local or get_default_locale()
 
