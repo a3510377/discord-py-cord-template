@@ -5,7 +5,7 @@ from typing import Any, Optional, Union
 
 import discord
 import rich
-from discord import ApplicationCommand, Intents
+from discord import ApplicationCommand, Embed, Intents
 from discord.ext import commands
 
 from bot import (
@@ -13,9 +13,10 @@ from bot import (
     Context,
     __version__,
     command_before_invoke,
+    i18n_command,
     set_default_locale,
 )
-from bot.core.help import HelpView
+from .help import HelpView
 
 log = logging.getLogger("bot")
 
@@ -80,7 +81,8 @@ class Bot(commands.Bot):
         self.log.info(f"cog {cog.__cog_name__} 加載完成")
 
     def add_application_command(self, command: ApplicationCommand) -> None:
-        command.name
+        i18n_command(command)
+
         super().add_application_command(command)
 
     def remove_cog(self, name: str) -> None:
@@ -96,3 +98,18 @@ class Bot(commands.Bot):
         await modal.setup(ctx)
 
         return modal
+
+    def set_authorization_embed(self, embed: Embed) -> Embed:
+        user = self.user
+
+        embed.set_author(
+            name=user.name,
+            icon_url=user.display_avatar,
+            url="https://github.com/a3510377/discord-py-cord-template",
+        )
+        embed.set_footer(
+            text="© 開發模板由 a3510377 製作",
+            icon_url="https://avatars.githubusercontent.com/u/70706886",
+        )
+
+        return embed

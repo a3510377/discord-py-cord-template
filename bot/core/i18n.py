@@ -271,7 +271,7 @@ def i18n_command(command: _CommandT) -> _CommandT:
         command.name_localizations |= dict(name)
 
     if isinstance(command, SlashCommand):
-        if isinstance(description := kwargs.get("description"), TranslatorString):
+        if isinstance(description := kwargs.get("i18n_description"), TranslatorString):
             if command.description_localizations is None:
                 command.description_localizations = {}
             command.description_localizations |= dict(description)

@@ -97,7 +97,7 @@ class BaseCommandsCog(BaseCog):
     @discord.slash_command(guild_only=True)
     async def help(self, ctx: ApplicationContext):
         view = await self.bot.help(ctx)
-        await ctx.send(view=view)
+        await ctx.send(embed=view.get_page(), view=view)
 
 
 def setup(bot: "Bot"):

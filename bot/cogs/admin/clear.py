@@ -2,14 +2,12 @@ import discord
 from discord import Embed, Member, Message
 
 from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
-from bot.core.i18n import i18n_command
 
 _ = Translator(__name__)
 
 
 @cog_i18n
-class ClearCog(BaseCog):
-    @i18n_command
+class ClearCog(BaseCog, name="管理"):
     @discord.slash_command(
         guild_only=True,
         i18n_name=_("刪除"),

@@ -4,14 +4,12 @@ import discord
 from discord import Embed
 
 from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
-from bot.core.i18n import i18n_command
 
 _ = Translator(__name__)
 
 
 @cog_i18n
-class InfoCog(BaseCog):
-    @i18n_command
+class InfoCog(BaseCog, name="雜項"):
     @discord.slash_command(
         guild_only=True,
         i18n_name=_("上線時間"),
