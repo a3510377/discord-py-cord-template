@@ -5,7 +5,7 @@ from typing import Any, Optional, Union
 
 import discord
 import rich
-from discord import ApplicationCommand, Embed, Intents
+from discord import ApplicationCommand, AutoShardedClient, Embed, Intents
 from discord.ext import commands
 
 from bot import (
@@ -21,7 +21,22 @@ from .help import HelpView
 log = logging.getLogger("bot")
 
 
-class Bot(commands.Bot):
+class _BotMeta(type):
+    def __new__(cls, *args: Any, **kwargs: Any):
+        name, base, attrs = args
+
+        if os.getenv("BOT_SHARD"):
+            log.info("使用分片啟動")
+            return type(name, (AutoShardedClient, *base), attrs, **kwargs)
+
+        return super().__new__(cls, name, base, attrs, **kwargs)
+
+
+class BotMeta(_BotMeta, type(commands.Bot)):
+    pass
+
+
+class Bot(commands.Bot, metaclass=BotMeta):
     __version__ = __version__
 
     def __init__(self, *args, dev: bool = False, **kwargs):
@@ -88,9 +103,6 @@ class Bot(commands.Bot):
     def remove_cog(self, name: str) -> None:
         if cog := super().remove_cog(name):
             self.log.info(f"cog {cog.__cog_name__} 移除完成")
-
-    def run(self, *args: Any, **kwargs: Any):
-        super().run(*args, **kwargs)
 
     async def help(self, ctx: ApplicationContext | Context) -> HelpView:
         modal = HelpView(self)

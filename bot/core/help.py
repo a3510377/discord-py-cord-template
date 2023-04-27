@@ -63,10 +63,11 @@ class HelpView(View):
                 option.value = class_name
                 self.pages_select_options[class_name] = option
             else:
-                self.pages_select_options["__utils"] = SelectOption(
-                    label=_("其它雜項"),
-                    value="__utils",
-                )
+                continue
+                # self.pages_select_options["__utils"] = SelectOption(
+                #     label=_("其它雜項"),
+                #     value="__utils",
+                # )
 
             self.pages[class_name].add_field(
                 name=cmd.mention,

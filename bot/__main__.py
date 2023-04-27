@@ -49,6 +49,7 @@ from discord.commands.core import valid_locales
 )
 @click.option("-r", "recursive", help="use recursive", is_flag=True)
 @click.option("-o", "overwrite", help="overwrite old po file", is_flag=True)
+@click.option("--split", "shard", help="use shard", is_flag=True)
 def run(
     input_token: bool,
     dev: bool,
@@ -60,7 +61,12 @@ def run(
     arg_include_paths: Path,
     recursive: bool,
     overwrite: bool,
+    shard: bool,
 ):
+    from .core.logging import init_logging
+
+    init_logging(level=level)
+
     if summon_i18n:
         if lang == ".":
             lang = ",".join(valid_locales)
@@ -79,9 +85,6 @@ def run(
         )
         return
 
-    from .core.bot import Bot
-    from .core.logging import init_logging
-
     if env_path is not None:
         if isinstance(env_path, str):
             dotenv.load_dotenv(env_path)
@@ -89,6 +92,10 @@ def run(
             dotenv.load_dotenv()
 
     token = os.getenv("DISCORD_TOKEN")
+
+    if shard:
+        # if BOT_SHARD is True use shard connect to discord
+        os.environ["BOT_SHARD"] = "1"
 
     if input_token:
         token = click.prompt("Token", hide_input=True)
@@ -101,9 +108,9 @@ def run(
         )
         return
 
-    init_logging(level=level)
+    from .core.bot import Bot
 
-    Bot(dev=dev).run(token)
+    Bot(dev=dev, test=True).run(token)
 
 
 if __name__ == "__main__":
