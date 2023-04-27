@@ -82,7 +82,6 @@ class POTFileManager:
         for outfile_path, potfile in self._potfiles.items():
             for lang in langs:
                 current_file = outfile_path / f"{lang}.po"
-                current_file.parent.mkdir(parents=True, exist_ok=True)
 
                 potfile.metadata |= {"Language": lang}
 
@@ -90,6 +89,10 @@ class POTFileManager:
                 if not overwrite and current_file.is_file():
                     old_potfile = pofile(current_file)
                     old_potfile.merge(potfile)
+
+                if not old_potfile[:]:
+                    continue
+                current_file.parent.mkdir(parents=True, exist_ok=True)
 
                 def sort(e: POEntry):
                     try:
@@ -123,6 +126,9 @@ class POTFileManager:
         comment = ""
         if comments:
             comment = "\n".join(comments) if isinstance(comments, list) else comments
+
+        if comment:
+            flags.append("python-format")
 
         if entry is None:
             self.potfile.append(

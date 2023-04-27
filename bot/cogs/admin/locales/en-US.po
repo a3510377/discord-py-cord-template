@@ -13,6 +13,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
+#: bot\cogs\admin\clear.py:10
+msgid "管理"
+msgstr ""
+
 #: bot\cogs\admin\clear.py:13
 msgid "刪除"
 msgstr "delete"

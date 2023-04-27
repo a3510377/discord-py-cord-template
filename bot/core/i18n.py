@@ -11,7 +11,9 @@ from typing import ClassVar, LiteralString, TypeVar, overload, TYPE_CHECKING
 from discord import (
     ApplicationContext as DiscordApplicationContext,
     ContextMenuCommand,
+    Member,
     SlashCommand,
+    User,
 )
 from discord import Cog
 from discord.commands.core import docs, valid_locales
@@ -196,32 +198,41 @@ def _unescape(string):
     )
 
 
+def from_ctx_get_local(
+    ctx: DiscordContext | DiscordApplicationContext,
+    guild_local: str | None = None,
+    **kwargs,
+) -> str:
+    if guild_local:
+        if isinstance(ctx, DiscordApplicationContext):
+            local = ctx.guild_locale
+        else:
+            local = ctx.guild.preferred_locale
+    else:
+        local = (
+            ctx.locale
+            if isinstance(ctx, DiscordApplicationContext)
+            else ctx.guild.preferred_locale
+        )
+
+    return local or get_default_locale()
+
+
+def from_user_get_local(user: User | Member, **kwargs) -> str:
+    return user.guild.preferred_locale or get_default_locale()
+
+
 async def command_before_invoke(
     ctx: DiscordContext | DiscordApplicationContext,
 ) -> "Context" | "ApplicationContext":
-    def _get_lang(**kwargs):
-        if kwargs.pop("guild_local", None):
-            if isinstance(ctx, DiscordApplicationContext):
-                local = ctx.guild_locale
-            else:
-                local = ctx.guild.preferred_locale
-        else:
-            local = (
-                ctx.locale
-                if isinstance(ctx, DiscordApplicationContext)
-                else ctx.guild.preferred_locale
-            )
-
-        return local or get_default_locale()
-
     def _base_translator(*args, **kwargs):
         return Translator(
             __name__,
             locales_path=Path(traceback.extract_stack()[-2].filename).parent
             / "locales",
-        )(*args, local=_get_lang(**kwargs), **kwargs)
+        )(*args, local=from_ctx_get_local(**kwargs), **kwargs)
 
-    ctx.__dict__["local"] = _get_lang
+    ctx.__dict__["local"] = from_ctx_get_local
     ctx.__dict__["_"] = _base_translator
 
     return ctx

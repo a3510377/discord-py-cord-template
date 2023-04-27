@@ -1,0 +1,42 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-04-27 22:10+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en-US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: dpy-template 1.0.0\n"
+
+#: bot\core\help.py:76 bot\core\help.py:76
+msgid "沒有介紹"
+msgstr ""
+
+#: bot\core\help.py:107 bot\core\help.py:107
+msgid "{bot.user} 指令列表"
+msgstr ""
+
+#: bot\core\help.py:108 bot\core\help.py:108
+msgid "伺服器數量"
+msgstr ""
+
+#: bot\core\help.py:110 bot\core\help.py:110
+msgid "機器人延遲"
+msgstr ""
+
+#: bot\core\help.py:111 bot\core\help.py:111
+msgid "{time:.2f} ms"
+msgstr ""
+
+#: bot\core\help.py:123 bot\core\help.py:123
+msgid "錯誤"
+msgstr ""
+
+#: bot\core\help.py:123 bot\core\help.py:123
+msgid "超出回應時間"
+msgstr ""

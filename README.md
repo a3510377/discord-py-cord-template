@@ -183,7 +183,7 @@ python start.py
 若須手動生成可以使用以下指令，其中 -s 表示模式切換至 `多語言檔案生成模式`, -l 表示需生成的語言(若都需要可使用 `.`)，-f 表示包含的資料夾，-r 表示遞歸可向深度的資料夾進行生成。其他更多指令可使用 `python -m bot --help` 查詢。
 
 ```sh
-python -m bot -s -l en-US -f bot/cogs -r
+python -m bot -s -l en-US -f bot -r
 ```
 
 ## ✏️ 內建功能

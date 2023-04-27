@@ -73,7 +73,7 @@ class HelpView(View):
                 name=cmd.mention,
                 value=description.get(lang)
                 if (description := cmd.description_localizations)
-                else "沒有介紹",
+                else _("沒有介紹", local=ctx.local()),
             )
 
         for cmd in bot.prefixed_commands.values():
@@ -104,9 +104,12 @@ class HelpView(View):
             embed.title = self.pages_select_options[id].label
             embed.description = self.pages_select_options[id].description
         else:
-            embed = Embed(title=f"{self.bot.user} 指令列表")
-            embed.add_field(name="伺服器數量", value=str(len(self.bot.guilds)))
-            embed.add_field(name="機器人延遲", value=f"{self.bot.latency * 1000:.2f} ms")
+            embed = Embed(title=_("{bot.user} 指令列表").format(bot=self.bot))
+            embed.add_field(name=_("伺服器數量"), value=str(len(self.bot.guilds)))
+            embed.add_field(
+                name=_("機器人延遲"),
+                value=_("{time:.2f} ms").format(time=self.bot.latency * 1000),
+            )
 
         self.bot.set_authorization_embed(embed)
 
@@ -117,6 +120,6 @@ class HelpView(View):
             child.disabled = True
 
         await self.message.edit(
-            embed=Embed(title="錯誤", description="超出回應時間"),
+            embed=Embed(title=_("錯誤"), description=_("超出回應時間")),
             view=self,
         )
