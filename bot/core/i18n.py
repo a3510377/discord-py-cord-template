@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-from collections import UserDict
 import logging
 import traceback
+from collections import UserDict
 from contextvars import ContextVar
 from enum import Enum, auto
 from pathlib import Path
-from typing import ClassVar, LiteralString, TypeVar, overload, TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar, LiteralString, TypeVar, overload
 
-from discord import (
-    ApplicationContext as DiscordApplicationContext,
-    ContextMenuCommand,
-    Member,
-    SlashCommand,
-    User,
-)
-from discord import Cog
+from discord import ApplicationContext as DiscordApplicationContext
+from discord import Cog, ContextMenuCommand, Member, SlashCommand, User
 from discord.commands.core import docs, valid_locales
 from discord.ext.commands import Context as DiscordContext
 

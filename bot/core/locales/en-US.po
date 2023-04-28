@@ -13,31 +13,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\core\help.py:76 bot\core\help.py:76
-msgid "沒有介紹"
+#: bot\core\help.py:75 bot\core\help.py:75
+msgid "看起來某人很懶，並沒有留下任何使用方法 owo"
 msgstr ""
 
-#: bot\core\help.py:107 bot\core\help.py:107
+#: bot\core\help.py:106 bot\core\help.py:106
+#, python-format
 msgid "{bot.user} 指令列表"
 msgstr ""
 
-#: bot\core\help.py:108 bot\core\help.py:108
+#: bot\core\help.py:107 bot\core\help.py:107
 msgid "伺服器數量"
 msgstr ""
 
-#: bot\core\help.py:110 bot\core\help.py:110
+#: bot\core\help.py:109 bot\core\help.py:109
 msgid "機器人延遲"
 msgstr ""
 
-#: bot\core\help.py:111 bot\core\help.py:111
+#: bot\core\help.py:110 bot\core\help.py:110
 #, python-format
 msgid "{time:.2f} ms"
 msgstr ""
 
-#: bot\core\help.py:123 bot\core\help.py:123
+#: bot\core\help.py:122 bot\core\help.py:122
 msgid "錯誤"
 msgstr ""
 
-#: bot\core\help.py:123 bot\core\help.py:123
+#: bot\core\help.py:122 bot\core\help.py:122
 msgid "超出回應時間"
 msgstr ""

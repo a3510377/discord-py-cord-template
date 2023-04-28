@@ -7,7 +7,6 @@ from discord.utils import async_all
 
 from bot import ApplicationContext, BaseCog, Bot, Context, Translator
 
-
 _ = Translator(__name__)
 
 
@@ -73,7 +72,7 @@ class HelpView(View):
                 name=cmd.mention,
                 value=description.get(lang)
                 if (description := cmd.description_localizations)
-                else _("沒有介紹", local=ctx.local()),
+                else _("看起來某人很懶，並沒有留下任何使用方法 owo", local=ctx.local()),
             )
 
         for cmd in bot.prefixed_commands.values():

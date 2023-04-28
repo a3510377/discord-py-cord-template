@@ -25,9 +25,9 @@ DECORATOR_NAMES_CLASS_KWARGS = (
     "description",
 )
 USE_FORMAT_STR = re.compile(
-    r"((?<!{){\w*(\.[[:alpha:]_]\w*|\[[^\]'\"]+\])*((![rsa])?(:\w?[><=^]?[ +-]?"
-    r"#?\d*,?(\.\d+)?[bcdeEfFgGnosxX%]?))?}(?!}))|%(\([\w\s]*\))?[-+#0]*(\d+|\*)"
-    r"?(\.(\d+|\*))?([hlL])?[diouxXeEfFgGcrsab%]"
+    r"{{|}}|{\w*(\.[a-zA-Z_]\w*|"
+    r"\[[^\]'\"]+\])*(![rsa])?(:\w?[><=^]?[ +-]?#?\d*,?(\.\d+)?[bcdeEfFgGnosxX%]?)?}|"
+    r"%(\([\w\s]*\))?[-+#0]*(\d+|\*)?(\.(\d+|\*))?([hlL])?[diouxXeEfFgGcrsab%]"
 )
 
 __version__ = "1.0.0"

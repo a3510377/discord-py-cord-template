@@ -2,11 +2,11 @@ import copy
 import logging
 import os
 import re
+import sys
 from datetime import datetime, timedelta
 from logging import Formatter, Logger, LogRecord
 from logging.handlers import BaseRotatingHandler
 from pathlib import Path
-import sys
 from typing import Optional, Union
 
 import rich

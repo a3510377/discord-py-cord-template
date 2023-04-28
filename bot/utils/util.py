@@ -1,34 +1,48 @@
 import inspect
 from pathlib import Path
-from typing import Callable, TypeVar, Union
 
 __all__ = (
     "fix_doc",
-    "has_value",
     "get_absolute_name_from_path",
 )
 
-T = TypeVar("T")
-
 
 def fix_doc(*doc: str):
+    """
+    Clean up indentation from docstrings.
+    Any whitespace that can be uniformly removed from the second line
+    onwards is removed.
+
+    Parameters:
+    -----------
+    *doc: list[`str`]
+        A doc that needs to be formatted.
+    """
     return inspect.cleandoc("\n".join(doc))
 
 
-def has_value(
-    value: T,
-    *,
-    check: Callable[[T], bool] = lambda x: x is None,
-) -> bool:
-    return not ((check is None and value is None) or (check and check(value)))
+def get_absolute_name_from_path(
+    path: str | Path,
+    base_path: str | Path | None = None,
+) -> str:
+    """
+    Converts absolute paths to relative positions.
 
+    Parameters:
+    -----------
+    path: `str` | `Path`
+        The absolute path that needs to be converted.
+    base_path: `str` | `Path` | None
+        The primary path of the relative path.
+    """
+    if not base_path:
+        from bot import __config_path__
 
-def get_absolute_name_from_path(filename: Union[str, Path]) -> str:
-    from bot import __config_path__
+        base_path = __config_path__
 
-    paths = [(p := Path(filename).resolve()).stem]
+    paths = [(p := Path(path).resolve()).stem]
 
-    while not __config_path__.samefile(p := p.parent):
+    while not Path(base_path).samefile(p := p.parent):
         paths.append(p.stem)
 
     return ".".join(reversed(paths))

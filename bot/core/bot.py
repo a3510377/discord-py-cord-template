@@ -16,6 +16,7 @@ from bot import (
     i18n_command,
     set_default_locale,
 )
+
 from .help import HelpView
 
 log = logging.getLogger("bot")
