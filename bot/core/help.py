@@ -72,7 +72,18 @@ class HelpView(View):
                 name=cmd.mention,
                 value=description.get(lang)
                 if (description := cmd.description_localizations)
-                else _("看起來某人很懶，並沒有留下任何使用方法 owo", local=ctx.local()),
+                else _("看起來某人很懶，並沒有留下任何東西 owo", local=lang),
+            )
+
+            embed = self.pages[f"{class_name}:{cmd.name}"]
+            self.bot.set_authorization_embed(embed)
+
+            embed.title = f"{cmd.name_localizations.get(lang)} {_('指令', local=lang)}"
+            embed.description = cmd.description_localizations.get(lang)
+
+            embed.add_field(
+                name=_("**格式**", local=lang),
+                value=_("`<>` 是必填的參數，`[]` 是選填的參數", local=lang),
             )
 
         for cmd in bot.prefixed_commands.values():
@@ -119,6 +130,6 @@ class HelpView(View):
             child.disabled = True
 
         await self.message.edit(
-            embed=Embed(title=_("錯誤"), description=_("超出回應時間")),
+            embed=embeds[0] if len(embeds := self.message.embeds) else self.get_page(),
             view=self,
         )

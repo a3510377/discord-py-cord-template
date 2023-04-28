@@ -124,5 +124,6 @@ class Bot(commands.Bot, metaclass=BotMeta):
             text="© 開發模板由 a3510377 製作",
             icon_url="https://avatars.githubusercontent.com/u/70706886",
         )
+        embed.timestamp = datetime.now()
 
         return embed

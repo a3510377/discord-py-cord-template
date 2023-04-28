@@ -40,9 +40,9 @@ class CogConnectionView(Ui.View):
             try:
                 self.bot.reload_extension(name)
                 done_count += 1
-            except Exception as e:
-                self.bot.log.error(type(e).__name__)
-                errors.__setitem__(name, e)
+            except Exception as error:
+                self.bot.log.exception(type(error).__name__, exc_info=error)
+                errors.__setitem__(name, error)
 
         embed = discord.Embed(
             title="重新加載擴展",
@@ -74,13 +74,14 @@ class CogConnectionView(Ui.View):
         for name, error in errors.items():
             if isinstance(error, ExtensionAlreadyLoaded):
                 continue
-            self.bot.log.error(error)
+
+            self.bot.log.exception(type(error).__name__, exc_info=error)
             embed.add_field(name=name, value=error)
 
         await interaction.message.edit(content=None, embed=embed, view=None)
 
 
-class BaseCommandsCog(BaseCog):
+class BaseCommandsCog(BaseCog, name="開發用"):
     @discord.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(CogConnectionView(self.bot))
@@ -97,7 +98,7 @@ class BaseCommandsCog(BaseCog):
     @discord.slash_command(guild_only=True)
     async def help(self, ctx: ApplicationContext):
         view = await self.bot.help(ctx)
-        await ctx.send(embed=view.get_page(), view=view)
+        await ctx.respond(embed=view.get_page(), view=view, ephemeral=True)
 
 
 def setup(bot: "Bot"):

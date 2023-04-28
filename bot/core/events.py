@@ -89,7 +89,7 @@ class BaseEventsCog(BaseCog):
         if isinstance(error, (CommandNotFound, NotOwner)):
             return
 
-        self.log.error(error, stack_info=True)
+        self.log.exception(type(error).__name__, exc_info=error)
 
     @discord.Cog.listener()
     async def on_application_command_error(
@@ -97,7 +97,7 @@ class BaseEventsCog(BaseCog):
         ctx: ApplicationContext,
         error: DiscordException,
     ):
-        self.log.error(error, stack_info=True)
+        self.log.exception(type(error).__name__, exc_info=error)
 
 
 def setup(bot: "Bot"):

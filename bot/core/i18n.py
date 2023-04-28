@@ -224,9 +224,9 @@ async def command_before_invoke(
             __name__,
             locales_path=Path(traceback.extract_stack()[-2].filename).parent
             / "locales",
-        )(*args, local=from_ctx_get_local(**kwargs), **kwargs)
+        )(*args, local=from_ctx_get_local(ctx, **kwargs), **kwargs)
 
-    ctx.__dict__["local"] = from_ctx_get_local
+    ctx.__dict__["local"] = lambda **kwargs: from_ctx_get_local(ctx, **kwargs)
     ctx.__dict__["_"] = _base_translator
 
     return ctx
@@ -270,15 +270,18 @@ def cog_i18n(cls: type | Translator | None = None):
 
 def i18n_command(command: _CommandT) -> _CommandT:
     kwargs = command.__original_kwargs__
+
+    if command.name_localizations is None:
+        command.name_localizations = {}
+
     if isinstance(name := kwargs.get("i18n_name", None), TranslatorString):
-        if command.name_localizations is None:
-            command.name_localizations = {}
         command.name_localizations |= dict(name)
 
     if isinstance(command, SlashCommand):
+        if command.description_localizations is None:
+            command.description_localizations = {}
+
         if isinstance(description := kwargs.get("i18n_description"), TranslatorString):
-            if command.description_localizations is None:
-                command.description_localizations = {}
             command.description_localizations |= dict(description)
 
         for option in command.options:
