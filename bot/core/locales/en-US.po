@@ -30,6 +30,7 @@ msgid "機器人延遲"
 msgstr ""
 
 #: bot\core\help.py:111 bot\core\help.py:111
+#, python-format
 msgid "{time:.2f} ms"
 msgstr ""
 

@@ -24,6 +24,11 @@ DECORATOR_NAMES_CLASS_KWARGS = (
     "name",
     "description",
 )
+USE_FORMAT_STR = re.compile(
+    r"((?<!{){\w*(\.[[:alpha:]_]\w*|\[[^\]'\"]+\])*((![rsa])?(:\w?[><=^]?[ +-]?"
+    r"#?\d*,?(\.\d+)?[bcdeEfFgGnosxX%]?))?}(?!}))|%(\([\w\s]*\))?[-+#0]*(\d+|\*)"
+    r"?(\.(\d+|\*))?([hlL])?[diouxXeEfFgGcrsab%]"
+)
 
 __version__ = "1.0.0"
 
@@ -127,7 +132,7 @@ class POTFileManager:
         if comments:
             comment = "\n".join(comments) if isinstance(comments, list) else comments
 
-        if comment:
+        if USE_FORMAT_STR.search(id):
             flags.append("python-format")
 
         if entry is None:

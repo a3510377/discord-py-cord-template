@@ -43,6 +43,7 @@ msgid "刪除訊息的原因"
 msgstr "The reason for delete message"
 
 #: bot\cogs\admin\clear.py:36 bot\cogs\admin\clear.py:123
+#, python-format
 msgid "由 {ctx.author} 清除 - {reason}"
 msgstr "Deleted by {ctx.author} - {reason}"
 
@@ -103,6 +104,7 @@ msgid "`before` 和 `after` 選項不得同時出現"
 msgstr "`before` and `after` options can not be showed on the same time"
 
 #: bot\cogs\admin\clear.py:125 bot\cogs\admin\clear.py:130
+#, python-format
 msgid "原因: {reason}"
 msgstr "Reason: {reason}"
 
