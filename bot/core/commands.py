@@ -2,17 +2,26 @@ import inspect
 from typing import Dict
 
 import discord
-from discord import ButtonStyle, ExtensionAlreadyLoaded, Interaction
+from discord import (
+    AutocompleteContext,
+    ButtonStyle,
+    ExtensionAlreadyLoaded,
+    Interaction,
+)
 from discord import ui as Ui
 from discord.ext import commands
+from discord.utils import basic_autocomplete
 
 from bot import (
     ApplicationContext,
     BaseCog,
     Bot,
+    Translator,
     get_absolute_name_from_path,
     reload_locales,
 )
+
+_ = Translator(__name__)
 
 
 class CogConnectionView(Ui.View):
@@ -81,7 +90,13 @@ class CogConnectionView(Ui.View):
         await interaction.message.edit(content=None, embed=embed, view=None)
 
 
-class BaseCommandsCog(BaseCog, name="開發用"):
+async def get_command(ctx: AutocompleteContext):
+    bot: Bot = ctx.bot
+
+    return [cmd.name for cmd in bot.all_commands.values()]
+
+
+class BaseCommandsCog(BaseCog, name="核心"):
     @discord.Cog.listener()
     async def on_ready(self):
         self.bot.add_view(CogConnectionView(self.bot))
@@ -96,9 +111,24 @@ class BaseCommandsCog(BaseCog, name="開發用"):
         )
 
     @discord.slash_command(guild_only=True)
-    async def help(self, ctx: ApplicationContext):
+    @discord.option(
+        "command",
+        str,
+        i18n_name=_("指令"),
+        i18n_description=_("要查詢的指令"),
+        autocomplete=basic_autocomplete(get_command),
+        default=None,
+    )
+    async def help(self, ctx: ApplicationContext, command: str):
         view = await self.bot.help(ctx)
-        await ctx.respond(embed=view.get_page(), view=view, ephemeral=True)
+
+        await ctx.respond(
+            embed=view.get_page()
+            if command is None
+            else view.get_page(command, page=False),
+            view=view,
+            ephemeral=True,
+        )
 
 
 def setup(bot: "Bot"):

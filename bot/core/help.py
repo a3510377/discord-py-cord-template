@@ -17,6 +17,7 @@ class HelpView(View):
         self.bot = bot
         self.pages = defaultdict[str, Embed](Embed)
         self.pages_select_options = dict[str, SelectOption]()
+        self.commands_pages = defaultdict[str, Embed](Embed)
 
     async def setup(self, ctx: ApplicationContext | Context) -> None:
         bot = self.bot
@@ -75,15 +76,25 @@ class HelpView(View):
                 else _("看起來某人很懶，並沒有留下任何東西 owo", local=lang),
             )
 
-            embed = self.pages[f"{class_name}:{cmd.name}"]
+            embed = self.commands_pages[cmd.name]
             self.bot.set_authorization_embed(embed)
 
             embed.title = f"{cmd.name_localizations.get(lang)} {_('指令', local=lang)}"
             embed.description = cmd.description_localizations.get(lang)
 
+            arg_dos: list[str] = []
+            for option in cmd.options:
+                arg_dos.append(
+                    ("<{name}>" if option.required else "[{name}]").format(
+                        name=option.name
+                    )
+                )
+
             embed.add_field(
                 name=_("**格式**", local=lang),
-                value=_("`<>` 是必填的參數，`[]` 是選填的參數", local=lang),
+                value=_("`<>` 是必填的參數，`[]` 是選填的參數\n{command_doc}", local=lang).format(
+                    command_doc=" ".join(arg_dos)
+                ),
             )
 
         for cmd in bot.prefixed_commands.values():
@@ -109,17 +120,21 @@ class HelpView(View):
             view=self,
         )
 
-    def get_page(self, id: str | None = None) -> Embed:
-        if embed := self.pages.get(id, None):
-            embed.title = self.pages_select_options[id].label
-            embed.description = self.pages_select_options[id].description
+    def get_page(self, id: str | None = None, page: bool = True) -> Embed:
+        # TODO add transaction lang
+        if page:
+            if embed := self.pages.get(id, None):
+                embed.title = self.pages_select_options[id].label
+                embed.description = self.pages_select_options[id].description
+            else:
+                embed = Embed(title=_("{bot.user} 指令列表").format(bot=self.bot))
+                embed.add_field(name=_("伺服器數量"), value=str(len(self.bot.guilds)))
+                embed.add_field(
+                    name=_("機器人延遲"),
+                    value=_("{time:.2f} ms").format(time=self.bot.latency * 1000),
+                )
         else:
-            embed = Embed(title=_("{bot.user} 指令列表").format(bot=self.bot))
-            embed.add_field(name=_("伺服器數量"), value=str(len(self.bot.guilds)))
-            embed.add_field(
-                name=_("機器人延遲"),
-                value=_("{time:.2f} ms").format(time=self.bot.latency * 1000),
-            )
+            embed = self.commands_pages.get(id, Embed(title=_(""), description=_("")))
 
         self.bot.set_authorization_embed(embed)
 
@@ -129,6 +144,7 @@ class HelpView(View):
         for child in self.children:
             child.disabled = True
 
+        # TODO fix view
         await self.message.edit(
             embed=embeds[0] if len(embeds := self.message.embeds) else self.get_page(),
             view=self,
