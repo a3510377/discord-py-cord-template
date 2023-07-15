@@ -11,6 +11,7 @@ on:
 
 jobs:
   deploy:
+    if: github.repository == 'a3510377/discord-py-cord-template'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
