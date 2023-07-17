@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2023-04-27 22:10+0800\n"
+"POT-Creation-Date: 2023-07-17 09:59+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: FULL NAME <EMAIL@ADDRESS>\n"
@@ -13,47 +13,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: dpy-template 1.0.0\n"
 
-#: bot\core\commands.py:119 bot\core\commands.py:119 bot\core\help.py:82
-#: bot\core\help.py:82
+#: bot\core\commands.py:117 bot\core\help.py:82
 msgid "指令"
 msgstr ""
 
-#: bot\core\commands.py:120 bot\core\commands.py:120
+#: bot\core\commands.py:118
 msgid "要查詢的指令"
 msgstr ""
 
-#: bot\core\help.py:76 bot\core\help.py:76
+#: bot\core\help.py:76
 msgid "看起來某人很懶，並沒有留下任何東西 owo"
 msgstr ""
 
-#: bot\core\help.py:94 bot\core\help.py:94
+#: bot\core\help.py:94
 msgid "**格式**"
 msgstr ""
 
-#: bot\core\help.py:95 bot\core\help.py:95
+#: bot\core\help.py:95
 #, python-format
 msgid ""
 "`<>` 是必填的參數，`[]` 是選填的參數\n"
 "{command_doc}"
 msgstr ""
 
-#: bot\core\help.py:128 bot\core\help.py:128
+#: bot\core\help.py:130
 #, python-format
 msgid "{bot.user} 指令列表"
 msgstr ""
 
-#: bot\core\help.py:129 bot\core\help.py:129
+#: bot\core\help.py:131
 msgid "伺服器數量"
 msgstr ""
 
-#: bot\core\help.py:131 bot\core\help.py:131
+#: bot\core\help.py:133
 msgid "機器人延遲"
 msgstr ""
 
-#: bot\core\help.py:132 bot\core\help.py:132
+#: bot\core\help.py:134
 #, python-format
 msgid "{time:.2f} ms"
 msgstr ""
-
-#~ msgid "`<>` 是必填的參數，`[]` 是選填的參數"
-#~ msgstr ""

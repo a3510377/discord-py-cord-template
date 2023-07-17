@@ -124,6 +124,9 @@ class POTFileManager:
         if self.current_file is None:
             raise RuntimeError("pot file 未設定")
 
+        if not id:
+            return
+
         entry = self.potfile.find(id)
         flags = ["docstring"] if is_docstring else []
         occurrence = (str(self.current_file), lineno)
@@ -152,7 +155,8 @@ class POTFileManager:
             if not entry.flags:
                 entry.flags = flags
 
-            entry.occurrences.append(occurrence)
+            if occurrence not in entry.occurrences:
+                entry.occurrences.append(occurrence)
             entry.occurrences.sort()
 
 
