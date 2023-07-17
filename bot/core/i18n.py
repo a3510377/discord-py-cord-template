@@ -6,7 +6,7 @@ from collections import UserDict
 from contextvars import ContextVar
 from enum import Enum, auto
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar, LiteralString, TypeVar, overload
+from typing import TYPE_CHECKING, ClassVar, TypeVar, overload
 
 from discord import ApplicationContext as DiscordApplicationContext
 from discord import Cog, ContextMenuCommand, Member, SlashCommand, User
@@ -111,7 +111,7 @@ class TranslatorString(UserDict):
 
     # fmt: off
     @overload
-    def format(self: LiteralString, *args: LiteralString, **kwargs: LiteralString) -> LiteralString: ...  # noqa
+    def format(self, *args: str, **kwargs: str) -> str: ...  # noqa
     @overload
     def format(self, *args: object, **kwargs: object) -> str: ...  # noqa
     # fmt: on
