@@ -72,6 +72,8 @@ Python Discord Bot(Pycord版) 基礎骨架
 
     ```sh
     pip install -r requirements/dev.txt
+    pip install -r requirements/prod.txt
+    pip install -r tool/requirements.txt
     ```
 
 - **`venv`**: 使用 python 內建函式庫 [venv](https://docs.python.org/zh-tw/3/tutorial/venv.html)
@@ -90,6 +92,7 @@ Python Discord Bot(Pycord版) 基礎骨架
 
     ```sh
     pip install -r requirements/dev.txt
+    pip install -r requirements/prod.txt
     pip install -r tool/requirements.txt
     ```
 
