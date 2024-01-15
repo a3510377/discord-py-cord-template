@@ -106,7 +106,7 @@ class LogTimeRotatingFileHandler(BaseRotatingHandler):
         time: bool = True,
         time_str: Optional[str] = None,
     ) -> Path:
-        filenames = []
+        filenames: list[str] = []
 
         if base_file:
             filenames.append(str(self.filename))

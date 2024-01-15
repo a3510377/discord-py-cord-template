@@ -1,5 +1,5 @@
 import discord
-from discord import Embed, Member, Message
+from discord import Embed, Member, Message, User
 
 from bot import ApplicationContext, BaseCog, Bot, Translator, cog_i18n
 
@@ -8,6 +8,11 @@ _ = Translator(__name__)
 
 @cog_i18n
 class ClearCog(BaseCog, name="管理"):
+    @discord.user_command()
+    async def add_member(self, ctx: ApplicationContext, user: User):
+        if ctx.guild_id != "":
+            return
+
     @discord.slash_command(
         guild_only=True,
         i18n_name=_("刪除"),

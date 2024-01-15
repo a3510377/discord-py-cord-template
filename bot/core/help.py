@@ -98,7 +98,10 @@ class HelpView(View):
             )
 
         for cmd in bot.prefixed_commands.values():
-            if not await async_all(predicate(ctx) for predicate in cmd.checks):
+            try:
+                if not await async_all(predicate(ctx) for predicate in cmd.checks):
+                    continue
+            except Exception:
                 continue
 
             prefixed_commands.append(cmd)
